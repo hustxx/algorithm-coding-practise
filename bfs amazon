@@ -1,0 +1,67 @@
+class TreeNode {
+  int val;
+  TreeNode *left, *right;
+  TreeNode(int v) {
+    val = v;
+    left = NULL;
+    right = NULL;
+  }
+}
+
+int findDistance(vector<int> nodes, int a, int b) {
+    sort(nodes.begin(), nodes.end());
+    TreeNode *root = buildBST(nodes, 0， nodes.size() - 1);
+    
+    vector<int> aPath, bPath;
+    
+    findPath(root, a, aPath);
+    findPath(root, b, bPath);
+    
+    if (aPath.size() == 0 || bPath.size() == 0) {
+        return 0;
+    }
+    int p1 = 0, p2 = 0;
+    while (p1 < aPath.size() && p2 < bPath.size() && aPath[p1] == bPath[p2]) {
+        p1++;
+        p2++;
+    }
+    
+    return aPath.size() - p1 + bPath.size() - p2 - 1;
+}
+
+TreeNode *buildBST(vector<int> nums, int start, int end) {
+    if (start > end) {
+        return NULL;
+    }
+    if (start == end) {
+        return new TreeNode(nums[start]);
+    }
+    int mid = start + (end - start) / 2;
+    TreeNode *root = new TreeNode(nums[mid]);
+    root->left = buildBST(nums, start, mid - 1);
+    root->right = buildBST(nums, mid + 1, end);
+    return root;
+}
+
+bool FindPath(TreeNode *root, int target, vector<int> &path) {
+    if (root == NULL) {
+        return false;
+    }
+    if (root->val == target) {
+        path.push_back(target);
+        return true;
+    }
+    path.push_back(root->val);
+    bool res = false;
+    if (target < root->val) {
+        res = FindPath(root->left, target, path);
+    } else  {
+        res = FindPath(root->right, target, path);
+    }
+    if (res) {
+        return true;
+    } else {
+        path.pop_back();
+        return false;
+    }
+}
