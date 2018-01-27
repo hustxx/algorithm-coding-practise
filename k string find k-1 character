@@ -1,0 +1,39 @@
+vector<string> findK_1(string s, int k) {
+    unordered_map<char, int> charMap;
+    int dup = 0;
+    int start = 0;
+    unordered_set<string> strSet;
+    vector<string> res;
+    
+    for (int i = 0; i < s.size(); i++) {
+        charMap[s[i]]++;
+        if (charMap[s[i]] == 2) {
+            dup++;
+        }
+        if (dup == 2) {
+            while (start <= i) {
+                charMap[start]--;
+                if (charMap[start] == 1) {
+                    start++;
+                    dup--;
+                    break;
+                }
+                start++;
+            }
+        }
+        if (i - start + 1 == k) {
+            if (dup == 1) {
+                strSet.insert(s.substr(start, k));
+            }
+            charMap[start]--;
+            if (charMap[start] == 1) {
+                dup--;
+            }
+            start++;
+        }
+       
+    }
+    
+    res = new vector<string>(strSet.begin(), strSet.end());
+    return res;
+}
