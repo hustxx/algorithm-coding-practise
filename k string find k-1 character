@@ -10,6 +10,16 @@ vector<string> findK_1(string s, int k) {
         if (charMap[s[i]] == 2) {
             dup++;
         }
+        if (charMap[s[i]] == 3) {
+            while (start <= i) {
+                charMap[start]--;
+                if (charMap[start] == 2) {
+                    start++;
+                    break;
+                }
+                start++;
+            }
+        }
         if (dup == 2) {
             while (start <= i) {
                 charMap[start]--;
