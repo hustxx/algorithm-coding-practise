@@ -1,0 +1,45 @@
+/*
+给一个正方形矩阵，里面都是正数或0，正数代表金矿的数量，你可以选择任何一个整数作为起点，给出可以拿到的最多的金矿，不能往回走。行走只有四个方向，
+上下左右。
+例子：下面例子可以选取 2 2 4 5 6 7 3 4，总和达到最大值。
+0 1 0 3 4
+2 2 0 7 0
+0 4 5 6 2
+0 0 0 0 0
+0 2 0 0 2
+输入中，正数不会形成cycle，比如见不到先面的case
+2 3
+1 4
+开始忘记cycle这件事儿了，后来提示我没有cycle，典型的memory search。遗憾的是，第一题可能花时间比较久（或者是找会议室浪费了时间），
+没写完这个题，只写了一半，倒是给他解释清楚了该怎么做记忆化搜索。
+*/
+
+
+int maxGoldMine(vector<vector<int>>& matrix) {
+	int res = 0;
+	
+	for (int i = 0; i < matrix.size(); i++) {
+		for (int j = 0; j < matrix[0].size(); j++) {
+			// visited point {x, y} set
+			unordered_set<pair<int, int>> visited;
+			res = max(res, findMaxPath(matrix, visited, i, j));
+		}
+	}
+	
+	return res;	
+}
+
+// return the max path start from {row, col}
+int findMaxPath(vector<vector<int>>& matrix, unordered_set<pair<int, int>>& visited, int row, int col) {
+	if (row < 0 || row >= matrix.size() || col < 0 || col >= matrix[0].size() || matrix[row][col] == 0 || visited.count({row, col}) != 0) {
+		return 0;
+	}
+	visited.insert({row, col});
+
+	int res = max(findMaxPath(matrix, visited, row + 1, col, val), findMaxPath(matrix, visited, row - 1, col, val));
+	res = max(res, findMaxPath(matrix, visited, row, col + 1, val));
+	res = max(res, findMaxPath(matrix, visited, row, col - 1, val));
+	visited.erase({row, col});
+	
+	return matrix[row][col] + res;
+}
