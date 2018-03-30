@@ -1,5 +1,47 @@
 html tree
 
 struct HtmlNode {
-
+	string content;
+	string tag;
+	vector<HtmlNode*> children;
 }
+// <html><head>hello<p>guys</p></head><body>happy hour</body></html>
+HtmlNode* buildHtmlTree(string s) {
+	vector<HtmlNode*> nodeStack;
+	HtmlNode* res;
+	while (!s.empty()) {
+		string tag = getTag(s);
+		if (tag is not end) {
+			string content = getContent(s);
+			HtmlNode* newNode = new HtmlNode(tag, content);
+			if (!nodeStack.empty()) {
+				nodeStack.back().children.push_back(newNode);
+			}
+			nodeStack.push_back(newNode);
+		} else {
+			res = nodeStack.back();
+			nodeStack.pop_back();
+		}
+		
+	}
+	
+	return res;
+}
+
+// DFS
+string getHtmlString(HtmlNode* root) {
+	string res = "";
+	if (!root) {
+		return res;
+	}
+	res = "<" + tag + ">" + content;
+	for (int i = 0; i < children.size(); i++) {
+		res += getHtmlString(children[i]);
+	}
+	
+	res += "</" + tag + ">";
+	
+	return res;
+}
+
+// BFS not a good idea
