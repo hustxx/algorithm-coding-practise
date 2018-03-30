@@ -1,0 +1,47 @@
+给你一个树，一个函数shouldBeEreased，你可以测试树中的每个节点是否需要被删除，返回一个list，保存这个树被删完一些结点后生成的子树。
+例子：
+                            a
+                 b                      c
+            d       e              f        g
+比如这个树删掉了b和f，返回的list应该为[a, d, e]
+这个题有点儿复杂，思考了2～3分钟，写了两个函数搞定的，一个函数做先序遍历探索需要删除的点，一个函数做删除操作，两个递归函数互相调用（删完之后把新的根结点送去做先序遍历）。. 1point3acres.com/bbs
+follow up：
+（1）没有写代码，改成了输入是一个树，和一个list里面含有所有删除的结点，该如何做？我的回答是自己写个shouldBeEreased套用之前的代码，或者就是遍历来做；
+（2）如何测试我写的代码；
+（3）把树改成二叉查找树，采用follow up 1的输入该怎么做？
+最后聊了各种情况的复杂度。
+
+class TreeNode {
+	Value val;
+	TreeNode* left;
+	TreeNode* right;
+};
+
+bool shouldBeEreased(TreeNode* node);
+
+vector<TreeNode*> deleteNodes(TreeNode* root) {
+	vector<TreeNode*> res;
+	checkNode(res, root);
+	return res;
+}
+
+
+TreeNode* checkNode(vector<TreeNode*>& res, TreeNode* node) {
+	if (node == NULL) {
+		return NULL;
+	}
+	node->left = checkNode(res, node->left);
+	node->right = checkNode(res, node->right);
+
+	if (shouldBeErased(node)) {
+		if (left) {
+			res.push_back(left);
+		}
+		if (right) {
+			res.push_back(right);
+		}
+		return NULL;
+	} else {
+		return node;
+	}
+}
