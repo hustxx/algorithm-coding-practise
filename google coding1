@@ -1,0 +1,37 @@
+/*  
+	假设给你一个字符串的iterator，如何实现一个iterator，通过调用hasNext和next可以返回字符串的统计信息。
+	例子：
+	逐个string iterator返回的内容为："a", "a", "a", "b", "a"
+	你实现的iterator每个next应该返回：<a, 3>, <b, 1>, <a, 1>
+	正常思路写就好了，没什么fancy的内容。
+*/
+class Solution {
+	string s;
+	string::iterator it;
+
+	Solution(str) {
+		s = str;
+		it = s.begin();
+	}
+
+	bool hasNext() {
+		if (it != s.end()) {
+			return true;
+		}
+		return false;
+	}
+
+	pair<char, int> next() {
+		if (!hasNext()) {
+			return {'', -1};
+		}
+		char output = *it;
+		int count = 0;
+		
+		while (it != s.end() && *it == output) {
+			it++;
+			count++;
+		}
+		return make_pair(output, count);
+	}
+}
