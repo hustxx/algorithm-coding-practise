@@ -1,0 +1,46 @@
+给定person class 两个方法，一个找爸爸，一个找妈妈，用这两个方法实现一个方法判断两个人是不是有血缘关系，假定人数有限
+
+class Person {
+	Person* findFather(Person* p);
+	Person* findMother(Person* p);
+}
+
+// find all the ancestors of person p and add them to a set
+void addAncestor(unordered_set<Person*>& ancestors, Person* p) {
+	if (!p->findFather() && !p->findMother()) {
+		ancestors.insert(p);
+		return;
+	}
+	if (!p->findFather()) {
+		addAncestor(ancestors, p->findMother(p));
+	}
+	if (!p->findMother()) {
+		addAncestor(ancestors, p->findMother(p));
+	}
+	return;
+}
+
+// find ancestors and check whether he exists in the set
+bool checkAncestor(unordered_set<Person*>& ancestor, Person* p) {
+	bool res = false;
+	if (!p->findFather() && !p->findMother()) {
+		if (ancestor.count(p) != 0) {
+			return true;
+		}
+		return false;
+	}
+	if (!p->findFather()) {
+		res = res || checkAncestor(ancestors, p->findMother(p));
+	}
+	if (!p->findMother()) {
+		res = res || addAncestor(ancestors, p->findMother(p));
+	}
+	return res;
+}
+
+bool isRelated(Person* p1, Person* p2) {
+	unordered_set<Person*> ancestors;
+	
+	addAncestor(ancestors, p1);
+	return checkAncestor(ancestors, p2);	
+}
