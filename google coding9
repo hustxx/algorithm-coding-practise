@@ -1,0 +1,47 @@
+一張長凳上面散著坐了一些人，新來的人要坐在最大的間隔中間。假設新來n個人，給出這n個人要坐的位置。
+
+延伸，架設長凳上一開始完全沒坐人，怎麼知道第n個來的人要坐哪
+
+struct cmp {
+	bool operator ()(const pair<int, int>& int1, const pair<int, int>& int2) {
+		if (int2.second - int2.first > int1.second - int1.first) {
+			return true;
+		} else if (int2.second - int2.first == int1.second - int1.first) {
+			return int2.fisrt < int1.first;
+		} else {
+			return false;
+		}
+	}
+}
+
+vector<int> findSeatPosition(int start, int end, vector<int>& occupied, int n) {
+	sort(occupied.begin(), occupied.end());
+	// interval {start, end} between two seated person
+	priority_queue<pair<int, int>, vector<pair<int, int>>, cmp> que;
+	int left = start;
+	for (int i = 0; i < occupied.size(); i++) {
+		right = occupied[i];
+		pair<int, int> tmp = make_pair(left, right);
+		que.push(tmp);
+		left = right;
+	}	
+	// last person to the end of chair
+	pair<int, int> last = make_pair(left, end);
+	que.push(last);
+	vector<int> res;
+	
+	// get the largest interval from heap
+	for (int i = 0; i < n; i++) {
+		pair<int, int> top = que.front();
+		que.pop();
+		int mid = top.left + (top.right - top.left) / 2;
+		res.push_back(mid);
+		// push the new intervals into heap
+		que.push(make_pair(top.left, mid));
+		que.push(make_pair(mid, top.right));
+	}
+	
+	return res;
+}
+
+
