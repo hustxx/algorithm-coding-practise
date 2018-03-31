@@ -1,0 +1,27 @@
+默认速度1,A移动当前速度的距离并速度加倍，R重置速度到1转向，给定AAAR，问移动后的位置，和给定位置如何移动到位置。
+类似leetcode copy and paste那题。只有不到半小时写code，聊天和设置电脑花了很多时间，
+这轮写了个recusive的方法后来发现还需要很多return的条件，没时间完善，不知道能不能过。
+
+// find the final position
+int getFinalPos(string s) {
+	int curSpeed = 1;
+	int dir = 1;
+	int res = 0;
+	for (int i = 0; i < s.size(); i++) {
+		if (s[i] == 'A') {
+			res += dir * curSpeed;
+			if (res < 0) {
+				res = 0;
+			}
+			curSpeed *= 2;
+		} else {
+			dir = -1 * dir;
+			curSpeed = 1;
+		}
+	}
+	
+	return res;
+}
+
+// find path
+
