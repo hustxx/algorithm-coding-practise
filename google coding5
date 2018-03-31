@@ -1,0 +1,35 @@
+找一个tree的所有的相等的subtree。
+
+
+// post-order string : {root1, root2...}
+unordered_map<string, vector<TreeNode*>> subMap;
+
+vector<TreeNode*> findSameSubtree(TreeNode* root) {
+	postTrav(root);
+	vector<TreeNode*> res;
+	
+	for (auto sub : subMap) {
+		if (sub.second.size() > 1) {
+			for (int i = 0; i < sub.second.size(); i++) {
+				res.push_back(sub.second[i]);
+			}
+		}
+	}
+	
+	return res;
+}
+
+string postTrav(TreeNode* node) {
+	if (!node) {
+		return "N";
+	}
+	string left = postTrav(node->left);
+	string right = postTrav(node->right);
+	string res = left + ',' + right + ',' + to_string(node->val);
+	subMap[res].push_back(node);
+	
+	return res;
+}
+
+
+
