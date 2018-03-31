@@ -1,0 +1,59 @@
+Given a sequence of words, check whether it forms a valid word square.
+
+A sequence of words forms a valid word square if the kth row and column read the exact same string, where 0 ≤ k < max(numRows, numColumns).
+Input:
+[
+  "abcd",
+  "bnrt",
+  "crmy",
+  "dtye"
+]
+
+Output:
+true
+
+Input:
+[
+  "abcd",
+  "bnrt",
+  "crm",
+  "dt"
+]
+
+Output:
+true
+
+Input:
+[
+  "ball",
+  "area",
+  "read",
+  "lady"
+]
+
+Output:
+false
+
+bool isValidSquare(vector<string> strs) {
+	if (strs.size() == 1) {
+		return true;
+	}
+	if (strs.size() != strs[0].size()) {
+		return false;
+	}
+
+	for (int i = 0; i < strs.size(); i++) {
+		for (int j = 0; j < strs[i].size(); j++) {
+			if (j >= strs.size() || i >= strs[j].size()  ||strs[i][j] != strs[j][i]) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+
+
+
+
+
