@@ -1,0 +1,36 @@
+Binary tree node，除了叶子是 integer 以外其他的 node 都是 operator, evaluate result。本来说有 +-*/。我 clarify 之后小哥想着热身题而已，
+就简化成了没有 / 也不会 overflow.
+很简单的那种 比如. 
+
+     +
+   /    \
+  -      * 
+/   \  /   \ 
+1   2  3   4
+
+返回 (1-2) + (3 * 4) 的结果就行。
+
+struct OpNode {
+	int val;
+	string op;
+	OpNode* left;
+	OpNode* right;
+};
+
+int calculateOp (OpNode* root) {
+	if (!root) {
+		return 0;
+	}
+	if (!root->left && !root->right) {
+		return root->val;
+	}
+	int leftRes = calculateOp(root->left);
+	int rightRes = calculateOp(root->right);
+	if (root->op == '+') {
+		return leftRes + rightRes;
+	} else if (root->op == '-') {
+		return leftRes - rightRes;
+	} else if (root->op == '*') {
+		return leftRes * rightRes;
+	}
+}
