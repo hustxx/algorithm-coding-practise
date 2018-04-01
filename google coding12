@@ -1,0 +1,57 @@
+给定坐标轴上一个小汽车，小汽车有两个api，加速和转向，加速使得汽车向前跑1秒，然后跑完1s之后速度翻倍，转向是的汽车方向调转，然后速度初始化为1，
+汽车的初始速度是1. 问的第一个问题是，给定一个字符串，字符串是调用一系列api，问汽车走了多远。
+然后follow up是，如果反过来，给定你汽车走了多远，让你返回一个可行的api调用序列。
+最后一个follow up是，给定汽车走了多远，返回一个最短的序列。这个没答上来，没时间了。
+
+int getDistance(string s) {
+	int dis = 0;
+	int speed = 1;
+	int dir = 1;
+	
+	for (int i = 0; i < s.size(); i++) {
+		if (s[i] == 'A') {
+			dis += speed * dir;
+			speed *= 2;
+		} else {
+			speed = 1;
+			dir *= -1;
+		}
+	}
+	return dis;
+}
+
+struct car {
+	int speed;
+	int dir;
+	int dis;
+	string op;
+}
+
+string getMinOperation(int dst) {
+	if (dst == 0) {
+		return "";
+	}
+	queue<car*> que;
+	car* c1 = new car(1, 1, 0, "A");
+	car* c2 = new car(1, -1, 0, "R");
+	que.push(c1);
+	que.push(c2);
+	
+	while (!que.empty()) {
+		car* top = que.front();
+		que.pop();
+		car* newCar = new car(top->speed, top->dir * -1, top->dis, top->op + "R");
+		top->dis = top->dis + top->speed * top->dir;
+		top->speed *= 2;
+		top->op += "A";
+		if (top->dis == dst) {
+			return top->op;
+		}
+		que.push(top);
+		que.push(newCar);
+	}
+	
+	return "";
+}
+
+
