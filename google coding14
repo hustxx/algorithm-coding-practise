@@ -1,0 +1,43 @@
+给定两个二叉树，如果这俩树的根节点的value一样，并且两个子树交换后（或者不交换）相等，那么就定义这俩树是类似的
+（同样，子树也可以交换自己的左右孩子来满足定义）。然后第一问是，写一个函数判断两个树是否是类似的。
+然后follow up的第一个是问，能不能减少递归调用子函数的次数，第二个是问，计算这个算法的复杂度，
+递归算法的复杂度怎么算我都忘的差不多了，最后从大哥提示的先找F（n）和F（n-1）的关系，然后做出来了。
+第三个是问，怎么把这个算法优化，我表示线性懵逼。
+然后他又问了一道别的题来提示我，如果有一个很长很长很大很大的字符串，然后我有另外一组很长很长很大很大的字符串，
+我想确认这个字符串是不是那个很大很大的字符串中的一个，那我要怎么办。最后他直接说，你设计一个二叉树的哈希函数，这样如果两个树是类似的，
+那你应该返回一样的哈希值。我&*%%￥#￥
+然后就是设计那个哈希函数。
+
+struct TreeNode {
+	int val;
+	TreeNode* left;
+	TreeNode* right;
+}
+
+bool isTreeSimilar(TreeNode* root1, TreeNode root2) {
+	if (!root1 && !root2) {
+		return true;
+	} else if (!root1 || !root2) {
+		return false
+	}
+	
+	if (root1->val != root2->val) {
+		return false;
+	}
+	return (isTreeSimilar(root1->left, root2->left) && isTreeSimilar(root1->right, root2->right)) || 
+			(isTreeSimilar(root1->left, root2->right) && isTreeSimilar(root1->right, root2->left));
+}
+
+string translateSimilarTree(TreeNode* root) {
+	if (!root) {
+		return "#";
+	}
+	string left = translateSimilarTree(root->left);
+	string right = translateSimilarTree(root->right);
+	
+	if (strcmp(left, right) < 0) {
+		return left + ',' + right + ',' + to_string(root->val);
+	} else {
+		return right + ',' + left + ',' + to_string(root->val);
+	}
+}
