@@ -1,0 +1,33 @@
+给 list of 机票(source, dest），没有一个 source 出现多次，要求 return 票的顺序。
+1.2 follow up 如果有多张票，这些票可以绕回已经去过的地方，但是每张票只能用一次，求票的顺序。
+
+vector<pair<string, string>> findTicketSequence(vector<pair<string, string>> tickets) {
+	if (tickets.size() <= 1) {
+		return tickets;
+	}
+	
+	// find the start place
+	unordered_map<string, string> ticketMap;
+	unordered_map<string, int> sourceCount;
+	for (int i = 0; i < tickets.size(); i++) {
+		ticketMap[tickets[i].first] = tickets[i].second;
+		sourceCount[tickets[i].first]++;
+		sourceCount[tickets[i].second]--;
+	}
+	string start = "", dst = "";
+	for (auto src : sourceCount) {
+		if (src.second == 1) {
+			start = src.first;
+		}
+		if (src.second == -1) {
+			dst = src.first;
+		}
+	}
+	vector<pair<string, string>> res;
+	while (start != dst) {
+		res.push_back({start, ticketMap[start]});
+		start = ticketMap[start];
+	}
+	
+	return res;
+}
