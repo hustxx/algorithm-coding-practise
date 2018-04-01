@@ -1,0 +1,41 @@
+给定一个二维矩阵，上面是26个英文字母，然后给定上下左右和按压五个api，模拟一个键盘，然后问你给定一个单词作为输入，
+输出调用api的顺序。矩阵是从左到右从上到下依次存放26个字母的。follow up是如果这个矩阵超级超级大，包含所有的阿斯克字符，
+那该怎么办，我说阿斯克字符加起来也不到1000个吧，他说假设汉字也加进去。这个follow up回答完了之后，后面就是尬聊。
+
+
+vector<string> enterWordSeq(string word, int cols) {
+	int x = 0, y = 0;
+	int rows = 25 / cols  + 1;
+	vector<string> res;
+	
+	for (int i = 0; i < word.size(); i++) {
+		int targetX = (word[i] - 'a') % cols;
+		int targetY = (word[i] - 'a') / cols;
+		moveTo(x, y, targetX, targetY, res);
+		x = targetX;
+		y = targetY;
+	}
+	
+	return res;
+}
+
+void moveTo(int x, int y, int targetX, int targetY, vector<string>& res) {
+	while (x > targetX) {
+		res.push_back("left");
+		x--;
+	}
+	while (x < targetX) {
+		res.push_back("right");
+		x++;
+	}
+	while (y < targetY) {
+		res.push_back("down");
+		y++;
+	}
+	while (y > targetY) {
+		res.push_back("up");
+		y--;
+	}
+	
+	return;
+}
