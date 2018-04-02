@@ -1,0 +1,50 @@
+4. 第四輪，國人小哥，N輛公交車, 每個公交車有起點、終點、費用,問從第一個站到最後一個站最小費用，用greedy做的，做完問了點問題就走了
+
+struct line {
+	string start;
+	string end;
+	int price;
+}
+
+struct cmp {
+	bool operator() (const pair<string, int>& l1, const pair<string, int>& l2) {
+		return l2.second < l1.second;
+	}
+}
+
+int getMinPrice(vector<line*> lines, string start, string end) {
+	// start: {dst, price from A to dst}...
+	unordered_map<string, vector<pair<string, price>>> lineMap;
+	
+	for (int i = 0; i < lines.size(); i++) {
+		lineMap[lines[i]->start].push_back({lines[i]->end, lines[i].price});
+		priceMap[lines[i]->end] = INT_MAX;
+	}
+	priceMap[start] = 0;
+	
+	// update the prices from A to dst
+	// smallest price to the top of the queue
+	priority_queue<pair<string, int>, vector<pair<string, int>>, cmp> que;
+	unordered_set<string> visited;
+	que.push_back({start, 0});
+	
+	while (!que.empty()) {
+		pair<string, int> top = que.front();
+		que.pop();
+		if (visited.count(top.first) != 0) {
+			continue;
+		}
+		visited.insert(top.first);
+		if (top.first == end) {
+			return top.second;
+		}
+		
+		for (int i = 0; i < lineMap[top.first].size(); i++) [
+			if (visited.count(lineMap[top.first][i] == 0) {
+				que.push({lineMap[top.first][i].first, lineMap[top.first][i].second + top.second});
+			}
+		}
+	}
+	
+	return -1;
+}
