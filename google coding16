@@ -1,0 +1,41 @@
+find the minimum difference of BST, 比如1,5,6,9，返回1（6-5），确认好条件之后，他硬是让我口述了一遍才让开始写代码，
+然后问了时间空间复杂度，基本所有的选择都会问你为什么，
+写完之后，花了很长时间聊这题用stack怎么做，举了个例子，模拟了一遍，还争了下细节
+
+struct TreeNode {
+	int val;
+	TreeNode* left;
+	TreeNode* right;
+}
+
+    int getMinimumDifference(TreeNode* root) {
+        if (!root) {
+            return 0;
+        }
+        vector<TreeNode*> stack;
+        int res = INT_MAX;
+        int pre = INT_MAX;
+        
+        while (root) {
+            stack.push_back(root);
+            root = root->left;
+        }
+        
+        while (!stack.empty()) {
+            TreeNode* tmp = stack.back();
+            stack.pop_back();
+            if (pre == INT_MAX) {
+                pre = tmp->val;
+            } else {
+                res = min(res, abs(pre - tmp->val));
+                pre = tmp->val;
+            }
+            tmp = tmp->right;
+            while (tmp) {
+                stack.push_back(tmp);
+                tmp = tmp->left;
+            }
+        }
+        
+        return res;
+    }
