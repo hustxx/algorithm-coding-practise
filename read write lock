@@ -1,0 +1,33 @@
+class read_write_lock {
+private:
+	mutex read_mtx;
+	mutex write_mtx;
+	int read_cnt; // count how many read locks we have
+	
+public:
+	void read_lock() {
+		read_mtx.lock();
+		read_cnt++;
+		if (read_cnt == 1) {
+			write_mtx.lock();
+		}
+		read_mtx.unlock();
+	}
+	
+	void read_unlock() {
+		read_mtx.lock();
+		read_cnt--;
+		if (read_cnt == 0) {
+			write_mtx.unlock();
+		}
+		read_mtx.unlock();
+	}
+	
+	void write_lock() {
+		write_mtx.lock();
+	}
+	
+	void write_unlock() {
+		write_mtx.unlock();
+	}
+};
