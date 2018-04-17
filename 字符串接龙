@@ -1,0 +1,41 @@
+给定一组字符串，判断这些字符串能否首尾相连，即前面一个字符串的最后一个字母和紧跟着的字符串的第一个字母相同。
+
+
+#include <csstring>
+#include <iostream>
+#include <vector>
+#include <string>
+
+int main () {}
+
+bool isConnected(vector<string>& strs) {
+	int n = strs.size();
+	if (n == 0) {
+		return 0;
+	}
+	return strNextConnected(strs, 0);
+}
+
+bool strNextConnected(vector<string>& strs, int idx) {
+	if (idx == strs.size()) {
+		return true;
+	}
+	for (int i = idx; i < strs.size(); i++) {
+		if (idx == 0) {
+			if (strNextConnected(strs, idx + 1)) {
+				return true;
+			}
+			swap(strs[i], strs[idx]);
+		} else {
+			if (strs[i].front() == strs[idx - 1].back()) {
+				swap(strs[i], strs[idx]);
+				if (strNextConnected(strs, idx + 1)) {
+					return true;
+				}
+				swap(strs[i], strs[idx]);
+			}
+		}
+	}
+	
+	return false;
+}
