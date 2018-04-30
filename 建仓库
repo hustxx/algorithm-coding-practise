@@ -1,0 +1,48 @@
+一维直线上有若干村庄，能够建若干个仓库，每个村庄的cost为距离其最近的仓库到它距离的平方，求最小cost总和
+
+vector<double> villages,
+dp[i][j]: min cost of build j warehouses in 0 - i village
+cost[m][n]: cost of build 1 warehouse between m and n village
+
+dp[i][j] = dp[m][j - 1] + cost[m + 1][i];
+
+
+double minCost(vector<double> villages, int k) {
+	int n = villages.size();
+	vector<vector<double>> cost(n, vector<double>(n, 0);
+	vector<vector<double>> minCost(n, vector<double>(k + 1, 0);
+	
+	vector<double> sum(n + 1, 0);
+	for (int i = 1; i <= n; i++) {
+		sum[i] += villages[i];
+	}
+	
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if (i == j) {
+				cost[i][j] = 0.0;
+			} else {
+				double wh = (sum[j] - sum[i - 1]) / (j - i + 1);
+				for (int k = i; k <= j; k++) {
+					cost[i][j] += (villages[k] - wh) * (villages[k] - wh);
+				}
+			}
+		}
+	}
+	
+	// get dp num
+	//dp[0][0] = 0;
+	for (int i = 0; i < n; i++) {
+		minCost[i][1] = cost[0][i];
+	}
+	
+	for (int i = 1; i < n; i++) {
+		for (int j = 2; j <= k; j++) {
+			for (int m = i - 1; m >= j - 1; m--) {
+				minCost = min(minCost, minCost[m][j - 1] + cost[m + 1][i]);
+			}
+		}
+	}
+	
+	return minCost.back().back();
+}
