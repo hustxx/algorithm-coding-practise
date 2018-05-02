@@ -1,0 +1,65 @@
+Description
+
+Implement a basic calculator to evaluate a simple expression string.
+
+The expression string may contain open ( and closing parentheses ), the plus + or minus sign -, non-negative integers and empty spaces .
+
+The expression string contains only non-negative integers, +, -, *, / operators , open ( and closing parentheses ) and empty spaces . 
+The integer division should truncate toward zero.
+
+You may assume that the given expression is always valid.
+
+Some examples:
+
+"1 + 1" = 2
+" 6-4 / 2 " = 4
+"2*(5+5*2)/3+(6/2+8)" = 21
+"(2+6* 3+5- (3*14/7+2)*5)+3"=-12
+
+
+int calculate(string s) {
+	s = s + '+';
+	char op = '+';
+	if (s.empty()) {
+		return 0;
+	}
+	int res = 0, curRes = 0, num;
+	
+	for (int i = 0; i < s.size(); i++) {
+		if (s[i] == ' ') {
+			continue;
+		}
+		if (s[i] >= '0' && s[i] <= '9') {
+			int j = i;
+			while (s[j] >= '0' && s[j] <='9') {
+				j++;
+			}
+			num = stoi(s.substr(i, j - i));
+			i = j - 1;
+		} else if (s[i] == '(') {
+			int cnt = 1, end = i + 1;
+			while (cnt != 0) {
+				if (s[end] == '(') {
+					cnt++;
+				} else if (s[end] == ')') {
+					cnt--;
+				}
+				end++;
+			}
+			num = calculator(s.substr(i + 1, end - i - 1));
+		} else if (s[i] == '*' || s[i] == '/') {
+			curRes = helper(curRes, num, op);
+			op = s[i];
+		} else if (s[i] == '+' || s[i] == '-') {
+			curRes = helper(curRes, num, op);
+			op = s[i];
+			res += curRes;
+			curRes = 0;
+		}
+		
+	}
+	
+	return res;
+}
+
+
