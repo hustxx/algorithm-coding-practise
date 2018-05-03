@@ -1,0 +1,32 @@
+[LeetCode] One Edit Distance 一个编辑距离
+ 
+
+Given two strings S and T, determine if they are both one edit distance apart.
+
+bool isOneDis(string s, string t) {
+	int n = s.size(), m = t.size();
+	if (n < m) {
+		return isOneDis(t, s);
+	}
+	if (n - m >= 2) {
+		return false;
+	} else if (n - m == 1) {
+		for (int i = 0; i < n; i++) {
+			if (s.substr(0, i) + s.substr(i + 1) == t) {
+				return true;
+			}
+		}
+	} else {
+		int dif = 0;
+		for (int i = 0; i < n; i++) {
+			if (s[i] != t[i]) {
+				dif++;
+			}
+		}
+		if (dif == 1) {
+			return true;
+		}
+	}
+	
+	return false;
+}
