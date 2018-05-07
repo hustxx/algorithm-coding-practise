@@ -1,0 +1,36 @@
+1、给一个n，求所有由0和1组成的长度为n的字符串，不能有连续三个相同字符。dfs做了.
+
+
+vector<string> getAllStr(int n) {
+	vector<string> res;
+	string pre = "";
+	getStrHelper(pre, n, 0, res);
+	
+	return res;
+}
+
+void getStrHelper(string& pre, int n, int idx, vector<string>& res) {
+	if (idx == n) {
+		res.push_back(pre);
+		return;
+	}
+	
+	if (pre.size() < 2) {
+		pre = pre + '0';
+		getStrHelper(pre, n, idx + 1, res);
+		pre = pre.substr(0, idx) + '1';
+		getStrHelper(pre, n, idx + 1, res);
+		pre = pre.substr(0, idx);
+	} else {
+		if (pre[idx - 1] == pre[idx - 2]) {
+			char tmp = (pre[idx - 1] == '1') ? '0' : '1';
+			pre = pre + tmp;
+			getStrHelper(pre, n, idx + 1, res);
+			pre = pre.substr(0, idx);
+		} else {
+		
+		}
+	}
+	
+	return;
+}
