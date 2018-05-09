@@ -1,0 +1,75 @@
+coding question: reverse a file in place, read and write.
+the file size is 100GB
+-read(fileName, startIndex, buffer, bufferSize)
+-write(fileName, startIndex, buffer, bufferSize)
+
+思路
+1. read chunk by chunk, const int buffer_size=1024*1024;
+2. use two pointers, one reads from begining, one reads from end, swap the two chunks
+3. reverse the characters inside the chunks.
+
+void swap()
+
+void reverseFile(File* f, long long size) {
+
+	std::ifstream is (f, std::ifstream::binary);
+  		if (is) {
+    	// get length of file:
+    	is.seekg (0, is.end);
+    	int length = is.tellg();
+    	is.seekg (0, is.beg);
+
+    	// allocate memory:
+    	char * buffer = new char [length];
+
+    	// read data as a block:
+    	is.read (buffer,length);
+
+    	is.close();
+
+    	// print content:
+    	std::cout.write (buffer,length);
+
+    	delete[] buffer;
+  }
+
+
+	int left = 0, right = size - CHUNK_SIZE;
+	char buff1[CHUNK_SIZE], buff2[CHUNK_SIZE];
+	while (left + CHUNK_SIZE < right) {
+		read(f, left, buff1, CHUNK_SIZE);
+		read(f, right, buff2, CHUNK_SIZE);
+		
+		//swap(buff1) and swap(buff2);
+		int start = 0, end = CHUNK_SIZE - 1;
+		while (start < end) {
+			char tmp = buff1[start];
+			buff1[start] = buff1[end];
+			buff1[end] = tmp;
+			start++;
+			end--;
+		}
+		start = 0, end = CHUNK_SIZE - 1;
+		while (start < end) {
+			char tmp = buff2[start];
+			buff2[start] = buff2[end];
+			buff2[end] = tmp;
+			start++;
+			end--;
+		}
+		write(f, left, buff2, CHUNK_SIZE);
+		write(f, right, buff1, CHUNK_SIZE);
+		left += CHUNK_SIZE;
+		right -= CHUNK_SIZE;
+	}
+	if (right - left + CHUNK_SIZE > 0) {
+		int left_size = right - left + CHUNK_SIZE;
+		int half_size = left_size / 2;
+		right = left + half_size();
+		
+		...
+	}
+	
+	
+	return;
+}
