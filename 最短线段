@@ -1,0 +1,16 @@
+二维平面一堆点，求最短线段的长度；
+必须N*logN
+
+全程懵逼，需要用divide&conquer, 有个结论是分区后，跨界的点之间的线段，只需要考虑六个点
+https://blog.csdn.net/hnu2012/article/details/70894678
+
+
+vector<pair<int, int>> findShortestLen(vector<pair<int, int>>& points) {
+	int left = INT_MAX, right = 0;
+	for (int i = 0; i < points.size(); i++) {
+		if (points[i].first < left) {
+			left = points[i].first;
+		}
+		
+	}
+}
