@@ -1,0 +1,55 @@
+Given two pre-order traversal arrays of two binary search tree respectively, find first pair of non-matching leaves. 
+Follow Up: If they are general binary trees instead of BSTs, could you solve it? give out your reason.
+
+/*
+pre order traversal, 2 cases: left leaf, right leaf,
+
+     8
+  5     11
+3   6  9
+      8.5 
+[8, 5, 3, 6, 11, 9, 8.5]
+[8, 5, 11]
+[8, 5, 9, 11]
+1. left leaf: no children: next node is bigger than it, and next, next is bigger than pre current node
+2. right leaf: no children: next node is bigger than first left parent;
+
+
+if next is smaller than cur, must be left child, not leaf.
+if next is bigger than cur, could be its right child or parent right. since parent already there, next is bigger than parent or not.
+*/
+
+
+pair<int, int> findFirstNonMatch(vector<int>& tree1, vector<int>& tree2) {
+	if (tree1.empty() || tree2.empty()) {
+		return {-1, -1};
+	}
+	int p1 = 0, p2 = 0;
+	vector<int> stack1, stack2;
+	int leaf1, leaf2;
+	while (p1 <= tree1.size() && p2 <= tree2.size()) {
+		while (p1 < tree1.size()) {
+			int cnt = 0;
+			int num = tree1[p1];
+			while (!stack1.empty() && num > stack1.back()) {
+					cnt++;
+					stack1.pop_back();
+			}
+			if (cnt >= 2) {
+				break;
+			}
+			leaf1 = num;
+			stack1.push_back(num);
+			p1++;
+		}
+		
+		...
+		
+		if (leaf1 != leaf2) {
+			return {leaf1, leaf2};
+		}
+		p1++; p2++;		
+	}
+	
+	return {-1, -1};
+}
