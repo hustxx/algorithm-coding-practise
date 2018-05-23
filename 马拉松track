@@ -1,0 +1,62 @@
+一个 track 上有很多 runners(runner 已经给的属性有 id 和 name)，还有很多 check points(已给属 性为 distance:距离终点的距离，和 id)，check points 可以检测到哪个 runner 跑过它.
+1. 实时更新 top k 的选手
+2. 用这个系统生成一个 dashboard 显示 runner 现在的名次/实时更新排名表。
+
+class DoubleListNode {
+public:
+	int points; // passed total points
+	Runner* person;
+	DoubleListNode* pre;
+	DoubleListNode* next;
+	
+	DoubleListNode(Runner& r) {
+		points = 0;
+		pre = NULL;
+		next = NULL;
+	}
+};
+
+class CheckPoint {
+private:
+	in pid;
+	int distance;
+public:
+	passCheckPoint (int id) {
+		sendSignalToTracker(id);
+	}
+}
+
+
+class tracker {
+private:
+	unordered_map<int, DoubleListNode*> runnerMap;
+	DoubleListNode* head, *tail;
+	vector<CheckPoint*> cps;
+public:
+	tracker(vector<Runner*>& runners) {
+		for (auto r : runners) {
+			DoubleListNode* newRunner = new DoubleListNode(r);
+			addToHead(newRunner);
+			runnerMap[r->id] = newRunner;
+		}
+	}
+	
+	void addToHead(Runner* r);
+	void addToTail(Runner* r);
+	void updateRank(int id);
+	
+	void passCheckPoint(int id, int pid) {
+		runnerMap[id]->points++;
+		updateRank(id);
+		return;
+	}
+	
+	vector<string> getTopK() {
+		vector<string> res;
+		DoubleListNode* p = head->next;
+		for (int i = 0; i < k; i++) {
+			res.push_back(p->persion->name);
+		}
+		return res;
+	}
+}
