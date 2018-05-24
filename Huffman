@@ -1,0 +1,70 @@
+最后半个小时做了一道Huffman编码，秒了。是一个string的形式 要求建树并且输出每个字符的编码
+
+struct Node {
+	char c;
+	int cnt;
+	Node* left;
+	Node* right;
+	//Node* parrent;
+};
+
+
+class HuffmanCode {
+private:
+	unordered_map<char, string> charMap;
+	Node* root;
+
+public:
+	void buildHuffmanTree(string s) {
+		unordered_map<char, int> m;
+		
+		auto cmp[](const Node* n1, const Node* n2) {
+			return n1->cnt > n2->cnt;
+		}
+		
+		priority_queue<Node*, vector<Node*>, decltype(cmp)> que(cmp);
+		for (char c : s) {
+			m[c]++;
+		}
+		for (auto nd : m) {
+			Node* newNode = new Node(nd.first, nd.second);
+			que.push(newNode);
+		}
+		while (que.size() > 1) {
+			Node* out1 = que.top();
+			que.pop();
+			Node* out2 = que.top();
+			que.pop();
+			
+			Node* tmp = new Node(NULL, out1->cnt + out2->cnt);
+
+			tmp->left = out1;
+			tmp->right = out2;
+			
+			que.push(tmp);
+		}
+		
+		root = que.top();
+		return;
+	}
+	
+	void travTree(Node* root, string encode) {
+		if (!root->left && !root->right) {
+			charMap[root->c] = encode;
+			return;
+		}
+		if (root->left) {
+			travTree(root->left, encode + '0');
+		}
+		if (root->right) {
+			travTree(root->right, encode + '1');
+		}
+		
+		return;
+	}
+	
+	void getEncode() {
+		travTree(root, "");
+	}
+	
+}
