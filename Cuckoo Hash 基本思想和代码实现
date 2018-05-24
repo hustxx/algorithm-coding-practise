@@ -1,0 +1,99 @@
+Cuckoo Hash 基本思想和代码实现
+
+Cuckoo Hash 是一种hash冲突解决方法， 其目的是即时使用简易的hash function 也能够实现hash key的均匀分布。
+基本思想是使用2个hash函数来处理碰撞，从而每个key都对应到2个位置。
+
+插入操作如下：
+1. 对key值hash，生成两个hash key值，hashk1和 hashk2, 如果对应的两个位置上有一个为空，那么直接把key插入即可。
+2. 否则，任选一个位置，把key值插入，把已经在那个位置的key值踢出来。
+3. 被踢出来的key值，需要重新插入，直到没有key被踢出为止。
+
+查找思路比较简单。
+
+template<class KeyT>  
+class CuckooHash;  
+
+template <typename K, typename V, typename F = KeyHash<K>>
+class CuckooHash {
+private:
+	int hash_size;
+	int max_loop;
+	
+	
+	HashNode<K, V> *mpKeyBucket1;
+	HashNode<K, V> *mpKeyBucket2;
+	//int lnCantInsertNum;
+	
+	int hashOne(KeyT k);
+	int hashTwo(KeyT k);
+
+public:
+	CuckooHash(int inNum)  {  
+        hash_size = inNum;  
+        mpKeyBucket1 = NULL;  
+        mpKeyBucket2 = NULL;  
+    }  
+	~CukooHash() {}
+	
+	bool reHash(int newKey, int loop) {
+		if (loop > max_loop) {
+			return false;
+		}
+		int key1 = hashOne(newKey);
+		itn key2 = hashTwo(newKey);
+		if (mpKeyBucket1[key1] == newKey) {
+			if (mpKeyBucket2[key2] == NULL) {
+				mpKeyBucket2[key2] = newKey;
+				return true;
+			} else {
+				if (reHash(mpKeyBucket2[key2], loop - 1)) {
+					mpKeyBucket2[key2] = newKey;
+					return true;
+				}
+			}
+		}
+		if ...
+		
+		return false;
+	}
+	
+	
+	bool insert (int& irKey) {
+		if (find(irKey)) {
+			return true;
+		}
+		
+		int hash1 = hashOne(irKey);
+		int hash2 = hashTwo(irKey);
+		if (mpKeyBucket1[hash1] == NULL) {
+			mpKeyBucket1[hash1] = irKey;
+			return true;
+		} else if (mpKeyBucket2[hash2] == NULL) {
+			mpKeyBucket2[hash2] = irKey;
+			return true;
+		} else {
+			if (reHash(mpKeyBucket1[hash1], 0)) {
+				mpKeyBucket1[hash1] = irKey;
+				return true;
+			} else if (reHash(mpKeyBucket2[hash2], 0) {
+				mpKeyBucket2[hash2] = irKey;
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	bool find(int& irKey) {
+		int hash1 = hashOne(irKey);
+		if (mpKeyBucket1 && mpKeyBucket1[hash1] == irKey) {
+			return true;
+		}
+		int hash2 = hashTwo(irKey);
+		if (mpKeyBucket2 && mpKeyBucket2[hash2] == irKey) {
+			return true;
+		}
+		return false;
+	}
+	
+}
