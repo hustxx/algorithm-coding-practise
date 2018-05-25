@@ -1,0 +1,58 @@
+In Docker, building an image has dependencies. An image can only be built once its dependency is built (If the dependency is from outside, 
+then the image can be built immediately). 
+Sometimes, engineers make mistakes by forming a cycle dependency of local images. In this case, ignore the cycle and all the images 
+depending on this cycle.
+Input is vector of pair of images (image, its dependency).
+
+Output the order of images to be built in order.
+
+##Example:
+```
+Example 1:
+{{"master", "ubuntu"}, {"numpy", "master"}, {"tensorflow", "numpy"}} 
+Output: master, numpy, tensorflow. 
+
+Example 2:
+{{"python", "numpy"}, {"numpy", "python"}, {"tensorflow", "ubuntu"}}
+Output: tensorflow.
+
+Example 3:
+{{"b", "c"}, {"c", "d"}, {"a", "b"}, {"d", "e"}, {"e","c"}, {"f", "g"}}
+Ouput: f
+
+
+vector<string> printImages(vector<pair<string, string>> images) {
+	unordered_map<string, unordered_set<string>> depMap;
+	unordered_map<string, unordered_set<string>> unlockMap;
+	unordered_set<string> start;
+	queue<string> que;
+	for (int i = 0; i < images.size(); i++) {
+		depMap[images[i].first] = images[i].second;
+		unlockMap[images[i].second] = images[i].first;
+		start.insert(images[i].first);
+		start.insert(images[i].second);
+	}
+	
+	for (auto m : depMap) {
+		start.erase(m.first);
+	}
+	for (string s : start) {
+		que.push(s);
+	}
+	vector<string> res;
+	while (!que.empty()) {
+		string topImage = que.front();
+		que.pop_back();
+		res.push_back(topImage);
+		for (int i = 0; i < unlockMap[topImage].size(); i++) {
+			unlockedImage = nlockMap[topImage][i];
+			depMap[unlockedImage].erase(topImage);
+			if (depMap[unlockedImage].size() == 0) {
+				que.push(unlockedImage);
+				depMap.erase(unlockedImage);
+			}
+		}
+	}
+	
+	return res;
+}
