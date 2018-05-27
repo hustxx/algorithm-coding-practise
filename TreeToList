@@ -1,0 +1,49 @@
+Convert a given Binary Tree to Doubly Linked List | Set 3
+Given a Binary Tree (BT), convert it to a Doubly Linked List(DLL) In-Place. 
+The left and right pointers in nodes are to be used as previous and next pointers respectively in converted DLL. 
+The order of nodes in DLL must be same as Inorder of the given Binary Tree. 
+The first node of Inorder traversal (left most node in BT) must be head node of the DLL.
+
+struct DLinkList {
+	int val;
+	DLinkList* pre;
+	DLinkList* next;
+	DLinkList(int v) {
+		val = v;
+		pre = NULL;
+		next = NULL;
+	}
+};
+
+DLinkList* convertTreeToList(TreeNode* root) {
+	vector<TreeNode*> stack;
+	if (!root) {
+		return NULL;
+	}
+	DLinkList* head = new DLinkList(0);
+	DLinkList* preNode = head;
+	while (root) {
+		stack.push_back(root);
+		root->left;
+	}
+	
+	while (!stack.empty()) {
+		TreeNode* node = stack.back();
+		stack.pop_back();
+		DLinkList* listNode = new DLinkList(node->val);
+		preNode->next = listNode;
+		listNode->pre = preNode;
+		preNode = listNode;
+		node = node->right;
+		while (node) {
+			stack.push_back(node);
+			node = node->left;
+		}
+	}
+	
+	return head->next;
+}
+
+
+
+
