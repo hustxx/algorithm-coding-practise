@@ -1,0 +1,17 @@
+二维平面一堆点，求最短线段的长度；
+必须N*logN
+
+全程懵逼，需要用divide&conquer, 有个结论是分区后，跨界的点之间的线段，只需要考虑六个点
+
+struct Point {
+	int x;
+	int y;
+	Point (int xv, int yv) {
+		x = xv;
+		y = yv;
+	}
+}
+
+int minDis(vector<Point> points) {
+
+}
