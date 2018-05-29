@@ -4,14 +4,52 @@
 全程懵逼，需要用divide&conquer, 有个结论是分区后，跨界的点之间的线段，只需要考虑六个点
 
 struct Point {
-	int x;
-	int y;
-	Point (int xv, int yv) {
+	doouble x;
+	double y;
+	Point (double xv, double yv) {
 		x = xv;
 		y = yv;
 	}
 }
+bool sort_by_x(Point& p1, Point& p2);
+bool sort_by_y(Point& p1, Point& p2);
+double getDis(Point& p1, Point& p2);
 
-int minDis(vector<Point> points) {
+double minDis(vector<Point>& points, int low, int high) {
+	if (high - low == 1) {
+		return getDis(points[low], points[high]);
+	}
+	if (high - low == 2) {
+		double d1 = getDis();
+		double d2 = getDis();
+		double d3 = getDis();
+		return min(d1, min(d2, d3));
+	}
+	int mid = low + (high - low) / 2;
+	double min_left = minDis(points, low, mid);
+	double min_right = minDis(points, mid + 1, high);
+	double d = min(min_left, min_right);
+	vector<Point> res;
+	for (int i = low; i <= high; i++) {
+		if (abs(points[i].x - points[mid]) < d) {
+			res.push_back(points[i]);
+		}
+	}
+	sort(res.begin(), res.end(), sort_by_y);
+	for (int i = 0; i < res.size() - 1; i++) {
+		for (int j = i + 1; j < res.size(); j++) {
+			if (res[j].y - res[i].y >= d) {
+				break;
+			}
+			double dtmp = getDis(res[i], res[j]);
+			d = min(dmtp, d);
+		}
+	}	
+	
+	retrun d;
+}
 
+double getMinDis(vector<Point>& points) {
+	sort(points.begin(), points.end(), sort_by_x);
+	return getMin(points, 0 , points.size() - 1);
 }
