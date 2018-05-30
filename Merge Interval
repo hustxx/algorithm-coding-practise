@@ -1,0 +1,24 @@
+题目是Merge Interval，给两个sorted list of interval，比如 [ [1,3], [4,6] ]和[ [1,9], [11,12] ]，返回[ [1,9], [11,12] ]
+
+vector<Interval> mergeInterval(vector<Interval>& interval1, vector<Interval>& interval2) {
+	vector<Interval> res;
+	int p1 = 0, p2 = 0;
+	
+	while (p1 < interval1.size() || p2 < interval2.size()) {
+		int start1 = (p1 < interval1.size()) ? interval1[p1].start : INT_MAX;
+		int start2 = (p2 < interval2.size()) ? interval2[p2].start : INT_MAX;
+		
+		Interval tmp = (start1 < start2) ? interval1[p1++] : interval2[p2++];
+		if (res.size() == 0) {
+			res.push_back(tmp);
+		} else {
+			if (tmp.start > res.back().end) {
+				res.push_back(tmp);
+			} else {
+				res[res.size() - 1].end = max(res.back().end, tmp.end);
+			}
+		}
+	}
+	
+	return res;
+}
