@@ -1,0 +1,75 @@
+已知一个BST(binary search tree), 将其原地转化成一个循环的排序过的双链表(circular sorted double linked list)。
+
+说明：BST的节点有两个指针left, right, 分别指向比它小，和比它大的节点。变成DLL之后，
+由于DLL节点原本有prev 和 next 指针分别和之前和之后的节点，这里假定原left指针指向之前，原right 指向之后节点。关于题意可以参考下图：
+
+
+struct TreeNode {
+	int val;
+	TreeNode* left;
+	TreeNode* right;
+};
+
+TreeNode* bsttoDLL (TreeNode* root) {
+	TreeNode* head = NULL;
+	TreeNode* preNode = NULL;
+	
+	inordertrav(root, preNode, head);
+	
+	return newHead;
+}
+
+void inordertrav(TreeNode* node, TreeNode* preNode, TreeNode* head) {
+	if (!node) {
+		return NULL;
+	}
+	inordertrav(node->left, preNode, head);
+	node->left = preNode;
+	if (!preNode) {
+		head = node;
+	} else {
+		preNode->right = node;
+	}
+	
+	TreeNode* right = node->right;
+	head->left = node;
+	node->right = head;
+	
+	
+	inorderTrav(right, node, head);
+	
+	return;
+}
+
+TreeNode* bfs2list(TreeNode* node) {
+	if (!node) {
+		return NULL;
+	}
+	TreeNode* leftList = bfs2list(node->left);
+	TreeNode* rightList = bfs2list(node->right);
+	node->left = node;
+	node->right = node;
+	
+	leftList = append(leftList, node);
+	leftList = append(leftList, rightList);
+	
+	return leftList;
+}
+
+TreeNode* append(TreeNode* left, TreeNode* right) {
+	if (!left) {
+		return right;
+	}
+	if (!right) {
+		return left;
+	}
+	TreeNode *alast = left->left;
+	TreeNode *blast = right->left;
+	alast->right = right;
+	right->left = alast;
+	left->left = blast;
+	blast->right = left;
+	return left;
+}
+
+
