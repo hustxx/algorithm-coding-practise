@@ -1,0 +1,37 @@
+还有一道是给了一个async copy function，这个函数可以传一个callback函数，就是说每次async copy一个file结束就可以自动call那个call back function，
+题目要求是最开始有一个文件在一个机器上，
+要求把这个文件以最快速度copy到50个机器上，还有一个限制条件就是一个机器最多只能同时copy文件到另外三个机器
+
+int machine_list = 50;
+Lock list_lock;
+
+void main (bool is_first) {
+	int local = 0;
+	for (int i = 0; i < 3; i++) {
+		list_lock.acquire();
+		copy(copy_cb, 0, machine_list);
+		machine_list--;
+		list_lock.unlock();
+	}
+	return;
+}
+
+
+void copy_cb(int local, int target) {
+		for (int i = 0; i <3; i++) {
+			list_lock.acquire();
+			if (machine_list > 0) {
+				copy(copy_cb, target, machine_list);
+				machine_list--;
+			}
+			list_lock.unlock();
+		} 
+		
+		list_lock.acquire();
+		if (machine_list > 0) {
+			copy(copy_cb, local, machine_list);
+			machine_list--;
+		}
+		list_lock.unlock();
+	return;
+}
