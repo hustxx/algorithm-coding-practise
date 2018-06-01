@@ -1,0 +1,29 @@
+4. 利口上面可能有，但是我忘了题号，题目是：给一个letters的顺序，然后判断给定的string array里面的单词之间是否满足这个顺序。
+举例：letters：[d, a, c, f, j]  满足顺序的strings: {dict, cat, finger} 不满足顺序的strings：{dag，ddtt}或者{jack，act}。
+follow up：利口 耳流久。
+
+bool isInOrder(vector<char>& dict, vector<strings>& strs) {
+	for (int i = 1; i < strs.size(); i++) {
+		if (!in_order(strs[i - 1], strs[i], dict)) {
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+bool in_order(string& s1, string& s2, vector<char>& dict) {
+	for (int i = 0; i < s1.size(); i++) {
+		if (s1[i] == s2[i]) {
+			continue;
+		}
+		for (int j = 0; j < dict.size(); j++) {
+			if (dict[j] == s1[i]) {
+				return true;
+			} else if (dict[j] == s2[i]) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
