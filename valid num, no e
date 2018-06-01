@@ -1,0 +1,46 @@
+valid num, no e
+
+
+enum TYPE {
+	NUM,
+	DOT,
+	SPACE,
+	INVALID,
+	SIGN,
+};
+
+int states[6][5] = {
+	//num, dot, space, sign, invalid
+		2,  3,   0,     1,     -1, //0 not start yet
+		2,  -1,  -1,	-1,	   -1, //1 sign
+	    2,  4,   5,     -1,    -1,//2 num 
+		2,  -1,  -1,    -1,    -1,//3 dot without pre num 
+		2,	-1,	  5,     -1,    -1,//4 dot with pre num
+	    -1,  -1,  5,     -1,     -1,//5 vaild with space
+};
+
+bool isValidNum (string s) {
+	if (s.size() == 0) {
+		return false;
+	}	
+	TYPE st = 0;
+	for (int i = 0; i < s.size(); i++) {
+		if (s[i] == '.') {
+			st = states[st][1];
+		} else if (s[i] == ' ') {
+			st = states[st][2];
+		} else if (s[i] >= '0' && s[i] <= '9') {
+			st = states[st][0];
+		} else if (s[i] == '-' || s[i] == '+') {
+			st = states[st][3];
+		} else {
+			st = -1;
+		}
+	}
+	
+	if (st == 2 || st == 4 || st == 5) {
+		return true;
+	} else {
+		return false;
+	}
+}
