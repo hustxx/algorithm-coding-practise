@@ -1,0 +1,21 @@
+第二题 利口柳儿药变种 TASK顺序不能变 一开始想用原题解法 效率太低 写到一半小哥说这不是最优让我改最优解 
+卡住了好一会终于想出来用MAP 还好最后写完了 小哥非常善良的让我过了。
+
+int task_scheduler(vector<char>& tasks, int k) {
+	int res = tasks.size();
+	unordered_map<char, int> task_map;
+	
+	for (int i = 0; i < tasks.size(); i++) {
+		if (task_map.count(tasks[i]) == 0) {
+			task_map[tasks[i]] = i;
+		} else {
+			int dis = i - task_map[tasks[i]] - 1;
+			if (dis < k) {
+				res += k - dis;	
+			}
+			task_map[tasks[i]] = i;
+		}
+	}
+	
+	return res;
+}
