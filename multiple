@@ -1,0 +1,29 @@
+第四轮，coding，三哥，求只包含素数的数组里面所有元素所有可能的乘积，简单说就是假如一个数组【3， 5， 7， 11】，
+求只包含1,2,3,4个元素的互相乘，要求输出所有的组合情况。 lz是用backtracking输出所有的可能组合搞定。
+
+vector<int> getMultiple(vector<int>& nums) {
+	vector<int> res;
+	for (int i = 0; i < nums.size(); i++) {
+		int len = res.size();
+		for (int j = 0; j < len; j++) {
+			int tmp = res[j] * nums[i];
+			res.push_back(tmp);
+		}
+		res.push_back(nums[i]);
+	}
+	return res;
+}
+
+void helper(vector<int>& nums, int total, int idx, bool &has_one) {
+	if (idx == nums.size()) {
+		res.push_back(total);
+		return;
+	}
+	if (nums[idx] == 1) {
+		has_one = true;
+	}
+	helper(nums, total, idx + 1);
+	helper(nums, total * nums[idx], idx + 1);
+	
+	return;
+}
