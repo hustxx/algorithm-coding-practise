@@ -1,0 +1,66 @@
+波峰波谷 一个每次只升或降1 的array (0,1,2,1,2,3) 求所有局部最大或最小 (example里应该是2 和 1). 
+folow up 是局部最大最小很少的情况下怎么做到log(n) (二分法) 后来也算是满意过了
+
+vector<int> getPeakElement(vector<int> &nums) {
+	vector<int> res;
+	if (nums.size() <= 2) {
+		return res;
+	}
+	
+	int pre = nums[1] - nums[0];
+	
+	for (int i = 2; i < nums.size(); i++) {
+		if (nums[i] - nums[i - 1] != pre) {
+			res.push_back(nums[i - 1]);
+			pre = nums[i] - nums[i - 1];
+		}
+	}
+	
+	return res;
+}
+
+
+vector<int> getPeaks(vector<int> &nums) {
+	vector<int> res;
+	if (nums.size() <= 2) {
+		return res;
+	}
+	
+	getHelper(nums, 0, nums.size() - 1, res);
+	
+	return res;
+}
+
+void getHelper(vector<int>& nums, int start, int end, vector<int>& res) {
+		if (start + 1 < end) {
+			if (isPeak(nums, start)) {
+				res.push_back(nums[start]);
+			}
+			if (isPeak(nums, right)) {
+				res.push_back(nums[end]);
+			}
+			return;
+		}
+		int mid = start + (end - start) / 2;
+		if (isPeak(nums, mid) {
+			res.push_back(nums[mid]);
+		}
+		if (abs(nums[start] - nums[mid]) != abs(mid - start)) {
+			getHelper(nums, start, mid - 1, res);
+		} 
+		if (abs(nums[end] - nums[mid]) != abs(mid - end)) {
+			getHelper(nums, mid + 1, end, res);
+		} 
+	
+		return;
+}
+
+bool isPeak(vector<int>& nums, int idx) {
+	if (idx == 0 || idx == nums.size() - 1) {
+		return false;
+	}
+	if (nums[idx] > nums[idx - 1] && nums[idx] > nums[idx + 1] || (nums[idx] < nums[idx - 1] && nums[idx] < nums[idx + 1]) {
+		return true;
+	}
+	return false;
+}
