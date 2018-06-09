@@ -1,0 +1,30 @@
+给出一个bfs, 一个 target value 找到 the previous element.
+
+
+int findPreElement(TreeNode* root, int target) {
+	int res = INT_MIN;
+	bool is_top = true;
+	
+	in_order_trav(root, target, res, is_top);
+	
+	return is_top ? -1 : res;
+}
+
+void in_order_trav(TreeNode* root, int target, int& res, bool& is_top) {
+	if (!root) {
+		return;
+	}
+	in_order_trav(root->left, target, res, is_top);
+	if (res != INT_MIN) {
+		return;
+	}
+	if (root->val == target) {
+		return;
+	} else {
+		is_top = false;
+		res = root->val;
+	}
+	in_order_trav(root->right, target, res, is_top);
+	
+	return;
+}
