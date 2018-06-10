@@ -1,0 +1,61 @@
+[LeetCode] Largest BST Subtree 最大的二分搜索子树
+ 
+
+Given a binary tree, find the largest subtree which is a Binary Search Tree (BST), 
+where largest means subtree with largest number of nodes in it.
+
+Note:
+A subtree must include all of its descendants.
+Here's an example:
+
+    10
+    / \
+   5  15
+  / \   \ 
+ 1   8   7
+The Largest BST Subtree in this case is the highlighted one. 
+The return value is the subtree's size, which is 3.
+
+ 
+
+Hint:
+
+You can recursively use algorithm similar to 98. Validate Binary Search Tree at each node of the tree, 
+which will result in O(nlogn) time complexity.
+Follow up:
+Can you figure out ways to solve it with O(n) time complexity?
+
+
+int getLargestSubtree(TreeNode* root) {
+	int res = 0;
+	int min = INT_MAX, max = INT_MIN;
+	getHelper(root, res, min, max);
+	
+	return res;
+}
+
+// max number of bst nodes with current node as root
+int getHelper(TreeNode* root, int& min, int& max, int& res) {
+	if (!root) {
+		return 0;
+	}
+	if (!root->left && !root->right) {
+		min = root->val;
+		max = root->val;
+		return 1;
+	}
+	int cnt = 1;
+	int left_min = INT_MAX, left_max = INT_MIN, right_min = INT_MAX, right_max = INT_MIN;
+	int left = getHelper(root->left, left_min, right_max, res);
+	int right = getHelper(root->right, right_min, right_max, res);
+	if (root->val > left_max && root->val < right_min) {
+		cnt = cnt + left + right;
+		res = max(res, cnt);
+		min = left_min;
+		max = right_max;
+	} else {
+		min = root->val;
+		max = root->val;
+	}
+	return cnt;
+}
