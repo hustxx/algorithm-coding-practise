@@ -1,0 +1,36 @@
+给定两个list，每个list都包含若干已经sort好的intervals，计算所有interval的union，用一个新的list装下并返回。
+[(1,3), (6,7), (9, 12)]
+[(2,4), (8,10)]
+返回 [(1,4), (6,7), (8,12)]
+
+vector<pair<int, int>> mergeList(vector<pair<int, int>>& list1, vector<pair<int, int>>& list2) {
+	if (list1.empty()) {
+		return list2;
+	} else if (list2.empty()) {
+		return list1;
+	}
+	vector<pair<int, int>> res;
+	int p1 = 0, p2 = 0;
+	
+	while (p1 < list1.size() || p2 < list2.size()) {
+		pair<int, int> l1 = (p1 == list1.size()) ? {INT_MAX, INT_MAX} : list1[p1];
+		pair<int, int> l2 = (p2 == list2.size()) ? {INT_MAX, INT_MAX} : list2[p2];
+		pair<int, int> l;
+		if (l1->first < 2->first) {
+			l = l1;
+			p1++; 
+		} else {
+			l = l2;
+			p2++;
+		}
+		if (res.empty() || res.back().second < l.first) {
+			res.push_back(l);
+		} else {
+			int end = res.size() - 1;
+			res[end].second = max(res[end].second, l.second);
+		}
+	}
+	
+	return res;
+
+}
