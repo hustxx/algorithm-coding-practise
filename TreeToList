@@ -44,6 +44,16 @@ DLinkList* convertTreeToList(TreeNode* root) {
 	return head->next;
 }
 
+DListNode* BST2List(TreeNode* root) {
+	if (!root) {
+		return NULL;
+	}
+}
+
+
+
+
+
 
 
 
