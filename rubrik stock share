@@ -1,0 +1,23 @@
+感觉是印度小哥，但毫无口音，可能也是abi吧。Company A owns 10% of Company B, Company B owns 5% of Company C, Company A owns 2% of Company C。
+首先model这个结构，其实就是有向有weight的图，然后给一个target和source，求source owns 多少percent of target。这个要和他讨论一下一些问题，
+比如有没有环，有没有ownship加起来大于1的情况，一开始是无环的，然后讨论到有环怎么抛出异常，然后怎么加速（memorized search，
+记录每个点own多少percentage的target）
+
+
+unordered_map<string, vector<pair<string, double>>> share_map;
+
+void set_share_map(vector<) {
+
+}
+
+double getShare(string A, string B) {
+	double res = 0.0;
+	if (B == A) {
+		return 1.0;
+	}
+	for (int i = 0; i < share_map[A].size(); i++) {
+		res += share_map[A][i].second * getShare(share_map[A][i].first, B);
+	}
+	
+	return res;
+}
