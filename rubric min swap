@@ -1,0 +1,56 @@
+Question 2: 找最小swap使所有节点都有path到起始 good node
+
+Directed Graph with each node having exactly one outgoing edge
+
+Good Node:
+  - A node which is marked as good
+  - A node which has a path to good node.
+
+One node in the graph is marked good
+
+Swap: n1 -> n2 => n1 -> n3，可以改变任何一个edge的start和end node.
+
+Minimum number of swaps to make all nodes good 
+
+我是用DFS做的，感觉用union find应该也可以做。
+
+
+struct Node {
+	int val;
+	Node* next;
+};
+
+int minSwap(vector<Node*> nodes, Node* goodNode) {
+	if (nodes.empty()) {
+		return 0;
+	}
+	int res = 0;
+	unordered_set<Node*> visited;
+	visited.insert(goodNode);
+	
+	for (int i = 0; i < nodes.size(); i++) {
+		if (visited.count(nodes[i]) > 0) {
+			continue;
+		}
+		unordered_set<Node*> group;
+		if(!find_good(nodes[i], goodNode, group, visited)) {
+			res++;
+		} 
+		for (Node* n : group) {
+			visited.insert(n);
+		}
+	}
+	return res;
+}
+
+bool find_good(Node* curNode, Node* goodNode, unordered_set<Node*> group, unordered_set<Node*> visited) {
+	while (curNode && group.count(curNode) == 0) {
+		group.insert(curNode);
+		curNode = curNode->next;
+		if (visited.count(curNode) > 0) {
+			return true;
+		}
+	}
+	
+	return false;
+}
