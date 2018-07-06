@@ -1,0 +1,36 @@
+Quenstion 1: 找所有local maximum，array满足两个条件
+1. |a[i] - a[i-1]| = 1
+2. The local maxima are sparse
+
+1 2 3 4 5 6 7 8 7 6 5 4 3 4 5 6 7 6 5 => [8 7]  
+
+
+vector<int> findLocalMax(vector<int> &nums) {
+	vector<int> res;
+	int left = 0, right = nums.size() - 1;
+	
+	findHelper(nums, left, right, res);
+	
+	return res;
+}
+
+void findHelper(vector<int> &nums, int left, int right, vector<int> &res) {
+	if (left > right) {
+		return;
+	}
+	int mid = left + (right - left) / 2;
+	if (mid == 0 || mid == nums.size() - 1) {
+		return;
+	}
+	if (nums[mid] > nums[right] && nums[mid] > nums[left]) {
+		res.push_back(nums[mid]);
+	} 
+	if (abs(nums[mid - 1] - nums[left]) != mid - 1 - left) {
+		findHelper(nums, left, mid - 1);
+	} 
+	if (abs(nums[mid + 1] - nums[right]) != right - mid - 1){
+		findHelper(nums, mid + 1, right);
+	}
+	
+	return;
+}
