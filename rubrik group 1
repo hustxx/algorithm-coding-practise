@@ -1,0 +1,75 @@
+第一场： 给定一个N ＊ N的方阵，方阵中的元素非0即1；和一个整数 k < N.  现在允许交换方阵中任意两个元素的位置，求通过交换在原方阵中得到一个k ＊ k全1方阵的最小步数。
+例如： . visit 1point3acres for more.
+N ＝ 4， k ＝ 2， 矩阵如下：
+0 0 0 1
+1 0 0 0  
+1 1 0 0
+0 0 0 0
+输出是 1， 因为只要交换 （0， 3） 和 （1， 1） 的元素即可。
+
+
+int group_ones(vector<vector<int>> &matrix, int k) {
+	int cnt = 0; // zero count in subarray
+	for (int i = 0; i < k; i++) {
+		for (int j = 0; j < k; j++) {
+			if (matrix[i][j] == 0) {
+				cnt++;
+			}
+		}
+	}
+	int res = cnt;
+	unordered_set<pair<int, int>> visited;
+	visited.insert({0,0});
+	dfs(matrix, 0, 1, res, cnt, visited, 0);
+	dfs(matrix, 1, 0, res, cnt, visited, 1);
+	return res;
+}
+
+void dfs(matrix, x, y, res, cnt, visited) {
+	if ...
+}
+
+
+int group_one(vector<vector<int>> &matrix, int k) {
+	int cnt = 0, res = k * k;
+	int n = matrix.size();
+	for (int i = 0; i < k; i++) {
+		for (int j = 0; j < k; j++) {
+			if (matrix[i][j] == 0) {
+				cnt++;
+			}
+		}
+	}
+	int start = cnt;
+	res = cnt;
+	for (int i = 0; i < n - k; i++) {
+		for (int j = 0; j < n - k; j++) {
+			if (i == 0 && j == 0) {
+				continue;
+			}
+			if (j == 0) {
+				for (int m = 0; m < k; m++) {
+					if (matrix[i - 1][m] == 0) {
+						cnt--;
+					}
+					if (matrix[i + k - 1][m] == 0) {
+						cnt++;
+					}
+				}
+				start = cnt;
+			} else {
+				for (int n = i; n < i + k; n++) {
+					if (matrix[n][j - 1] == 0) {
+						cnt--;
+					}
+					if (matrix[n][j - 1 + k] == 0) {
+						cnt++;
+					}
+				}
+			}
+			res = min(res, cnt);
+			
+		}
+	}
+	return res;
+}
