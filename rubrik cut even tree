@@ -1,0 +1,53 @@
+第二场：有一棵树，每个节点能有任意多的子节点。现在要求删除树中的一些边，使得得到的森林中所有的树都有偶数个节点。求一种删除的方法，使得删除的边最多。
+
+例如：
+           a
+      b         c
+  d   
+可以删除（a －> b ) 这条边，最后得到的森林是
+    b
+d
+和
+  a
+      c
+
+
+int cutTree(TreeNode* root) {
+	vector<pair<TreeNode*, int>> res;
+	int num = helper(root, res);
+	if (num % 2 == 0) {
+		return res.size();
+	}
+	return 0;
+}
+// return value: how many nodes int the sub tree
+int helper(TreeNode* node, vector<pair<TreeNode*, int>> &res) {
+	if (!node) {
+		return 0;
+	}
+	int cnt = 1;
+	for (int i = 0; i < node->neighbors.size(); i++) {
+		int num = helper(node->neighbors[i]), res);
+		if (num != 0 && num % 2 == 0) {
+			res.push_back({node, i});
+		} else {
+			cnt += num;
+		}
+	}
+	
+	return cnt;
+/*	
+	int left = helper(node->left, res);
+	int right = helper(node->right, res);
+	if (left % 2 == 0 && right % 2 == 0) {
+		return left + right + 1;
+	} else if (left % 2 == 0 && node->left) {
+		res.push_back({node, 0});
+	} else if (right % 2 == 0 && node->right) {
+		res.push_back({node, 1});
+	}
+	
+	return left + right + 1;
+	
+*/
+}
