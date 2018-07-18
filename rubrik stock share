@@ -5,19 +5,56 @@
 
 
 unordered_map<string, vector<pair<string, double>>> share_map;
+unordered_map<string, double> memory;
 
-void set_share_map(vector<) {
+void set_share_map(vector<string, pair<string, double>> &input) {
 
 }
 
 double getShare(string A, string B) {
 	double res = 0.0;
-	if (B == A) {
+
+	unordered_set<string> visited;
+	visited.insert(A);
+	
+	res = dfs(A, B, visited);
+	if (res == -1.0) {
+		return -1.0;
+	} else {
+		return res;
+	}
+}
+
+void dfs(string cur, string target, unordered_set<string> &visited) {
+	if (target == cur) {
 		return 1.0;
 	}
-	for (int i = 0; i < share_map[A].size(); i++) {
-		res += share_map[A][i].second * getShare(share_map[A][i].first, B);
+	double res = 0.0;
+	if (memory.count(cur) > 0) {
+		return memory[cur];
 	}
+	
+	for (int i = 0; i < share_map[cur].size(); i++) {
+		if (visited.count(share_map[cur][i].first) == 0) {
+			visited.insert(share_map[cur][i].first);
+			try {
+				double share = dfs(share_map[cur][i].first, target, visited);
+				if (share == -1.0) {
+					return -1.0;
+				}
+				res += share_map[cur][i].second * share;
+				visited.erase(share_map[cur][i].first);
+			} catch (const char* msg) {
+				cerr<<msg<<endl;
+				return -1.0;
+			}
+		} else {
+			// todo: error
+			// throw "loop detected, invalid input";
+			return -1.0;
+		}
+	}
+	memory[cur] = res;
 	
 	return res;
 }
