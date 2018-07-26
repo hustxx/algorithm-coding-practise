@@ -1,0 +1,20 @@
+6 一个character会是一个byte或者两个bytes。两个bytes的话用10或11表示，一个byte用0表示。给一串1或者0，
+问你最后一个0是不是1-byte character。Examples: [100]->true， [1110]->false
+
+bool endWithOneByte(string &s) {
+	int run = 0;
+	bool res = false;
+	while (run < s.size()) {
+		if (s[run] == '1') {
+			run += 2;
+			if (run + 1 < s.size() && s[run + 1] == '0') {
+				res = false;
+			}
+		} else {
+			run++;
+			res = true;
+		}
+	}
+	
+	return res;
+}
