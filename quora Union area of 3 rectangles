@@ -1,0 +1,107 @@
+9 Union area of 3 rectangles. 計算兩個矩形的面積, follow up: 3個, N個
+
+
+int unionof2rectangles(vector<pair<int, int>> &rec1, vector<pair<int, int>> &rec2) {
+	if (rec1[0].first > rec2[0].first) {
+		return unionof2rectangles(rec2, rec1);
+	}
+	int size1 = (rec1[1].first - rec1[0].first) * (rec1[1].second - rec1[0].second);
+	int size2 = (rec2[1].first - rec2[0].first) * (rec2[1].second - rec2[0].second);
+
+	int left_bot_x = max(rec1[0].first, rec2[0].first);
+	int left_bot_y = max(rec1[0].second, rec2[0].second);
+	int right_top_x = min(rec2[1].first, rec1[1].first);
+	int right_top_y = min(rec1[1].second, rec2[1].second);
+	if (left_bot_x >= right_top_x || left_bot_y >= right_top_y) {
+		return size1 + size2;
+	} else {
+		return size1 + size2 - (right_top_x - left_bot_x) * (right_top_y - left_bot_x);
+	}
+}
+
+int getsize(vector<pair<int, int>> &rec) {
+	if (rec.size() == 0) {
+		return 0;
+	}
+	return (rec[1].first - rec[0].first) * (rec[1].second - rec[0].second);
+}
+
+int unionof3rectangles(vector<pair<int, int>> &rec1, vector<pair<int, int>> &rec2, vector<pair<int, int>> &rec3) {
+	int size1 = (rec1[1].first - rec1[0].first) * (rec1[1].second - rec1[0].second);
+	int size2 = (rec2[1].first - rec2[0].first) * (rec2[1].second - rec2[0].second);
+	int size3 = (rec3[1].first - rec3[0].first) * (rec3[1].second - rec3[0].second);
+	
+	vector<pair<int, int>> u12 = unionof2rec(rec1, rec2);
+	vector<pair<int, int>> u23 = unionof2rec(rec2, rec3);
+	vector<pair<int, int>> u13 = unionof2rec(rec1, rec3);
+	vector<pair<int, int>> u123 = unionof2rec(u13, rec2);
+	
+	return size1 + size2 + size3 - getsize(u12) - getsize(u23) - getsize(u13) + getsize(u123);
+}
+
+struct rec {
+	int lx, ly, rx, ry;
+}
+
+int unionofnrec(vector<rec> &recs) {
+	multiset<string> ylens;
+	vector<pair<x, pair<string, int>>> x_points;
+	int res = 0;
+	for (int i = 0; i < recs.size(); i++) {
+		x_points.push({recs[i].lx, {get_key(recs[i].ly, recs[i].ry), 1}});
+		x_points.push({recs[i].rx, {get_key(recs[i].ly, recs[i].ry), -1}});
+	}
+	sort(x_points.begin(), x_points.end(), cmp);
+	int pre = x_points[0].first;
+	for (auto p : x_points) {
+		if (p.first != pre) {
+			int x_len = p.first - pre;
+			int y_len = get_ylen(ylens);
+			res += x_len * y_len;
+		}
+		pre = p.first;
+		if (p.second.seond == 1) {
+			ylens.insert(p.second.first);
+		} else {
+			ylens.erase(ylens.find(p.second.first));
+		}
+		
+	}
+	return res;
+}
+
+string get_key(int y1, int y2) {
+	return to_string(y1) + "," + to_string(y2);
+}
+
+int get_ylen(multiset<string> &ylens) {
+	if (ylens.size() == 0) {
+		return 0;
+	}
+	vector<pair<int, int>> ycords;
+	for (auto y : ylens) {
+		int idx = y.find_first_of(',');
+		int y1 = stoi(y.substr(0, idx));
+		int y2 = stoi(y.substr(idx + 1));
+		ycords.push_back({y1, y2});
+	}
+	sort(ycords.begin(), ycords.end(), cmp2);
+	int res = 0;
+	int cur_left = ycords[0].first;
+	int cur_right = ycords[0].second;
+	
+	for (int i = 1; i < ycords.size(); i++) {
+		if (ycords[i].first <= cur_right) {
+			cur_right = max(cur_right, ycords[i].second);
+		} else {
+			res += cur_right - cur_left;
+			cur_left = ycords[i].first;
+			cur_right = ycords[i].secnd;
+		}
+	}
+	res += cur_right - cur_left;
+	
+	return res;
+}
+
+
