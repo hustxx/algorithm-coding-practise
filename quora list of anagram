@@ -1,0 +1,14 @@
+先写的是找一个单词的list of anagram，代码秒过。 
+follow up改成input是个list of words，返回所有word的list of anagrams.
+# list of words ['rats', 'sbyo']
+# Output: [['arts', 'star', 'rats'], ['boys']]
+
+
+vector<string> getAnagrams(vector<string> &strs, string target) {
+	unordered_map<string, vector<string>> strMap;
+	for (int i = 0; i < strs.size(); i++) {
+		string key = getkey(strs);
+		strMap[key].push_back(strs[i]);
+	}
+	return strMap[getkey(target)];
+}
