@@ -1,0 +1,20 @@
+25 给你一串素数 让你求他们任意组合的乘积。
+就是[2,3]会返回[6] 
+给出 arr = [2,3,5], 返回 [6,10,15,30]。
+
+
+vector<int> getProductSet(vector<int> &nums) {
+	vector<int> res;
+	res.push_back(arr[0] * arr[1]);
+	for (int i = 2; i < nums.size(); i++) {
+		int len = res.size();
+		for (int j = 0; j < res.size(); j++) {
+			res.push_back(res[j] * nums[i]);
+		}
+		for (int k = 0; k < i; k++) {
+			res.push_back(nums[k] * nums[i]);
+		}
+	}
+	
+	return res;
+}
