@@ -1,0 +1,34 @@
+问的问题非常简单，就是一个螺旋矩阵
+  1  2 3  4  5
+  6  7 8  9 10
+11 12 13 14 15
+16 17 18 19 20
+21 22 23 24 25
+要从内往外打出13, 14,9, 8, 7, 12, 17, 18, 19, 20, 15, 10, 5, 4, 3, 2, 1, 6, 11, 16, 21, 22, 23, 24,25这样。
+
+vector<int> spiralOrder(vector<vector<int>>& matrix) { 
+	 int n = matrix.size();
+	 int start = n / 2;
+	 vector<int> res;
+	 res.push_back(matrix[start][start]);
+	 int level = n - 1;
+	 int x = start, y = start + 1;
+	 for (int i = level; i >= 0; i--) {
+	 	for (x = x; x >= level; x--) {
+			res.push_back(matrix[x][y]);
+		}
+		x++;
+		for (y = y; y >= level; y--) [
+			res.push_back(matrix[x][y]);
+		}
+		y++;
+		for (x = x; x <= n - level; x++) {
+			res.push_back(matrix[x][y]);
+		}
+		x--;
+		for (y = y; y <= n - level; y++) {
+			res.push_back(matrix[x][y]);
+		}
+	 }
+	 return res;
+}
