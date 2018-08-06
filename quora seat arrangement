@@ -1,0 +1,65 @@
+给定一个座位人数，比如5，然后可以随意加入人或者减少人，要求保证人与人之间的距离是最大，如果有距离相同的位置选最左边的。比如有10个座。
+0 0 0 0 0 0 0 0 0 0
+After Add(1) :
+1 0 0 0 0 0 0 0 0 0
+After Add(2) :
+1 0 0 0 0 0 0 0 0 2
+After Add(3) :
+1 0 0 0 3 0 0 0 0 2
+(4和5都能选，但是4最左)
+After Add(4) :
+1 0 4 0 3 0 0 0 0 2
+(2和6都能选，但是2最左)
+After Remove(3):
+1 0 4 0 0 0 0 0 0 2
+After Add(5) :
+1 0 4 0 0 5 0 0 0 2
+
+vector<int> seats;
+unordered_map<int, int> m;
+
+// o(n)
+int add(int student) {
+	int left = 0, right = 0, pos = -1;
+	int dis = 0;
+	if (seats[0] == 0) {
+		while (right < seats.size() && seats[right] == 0) {
+			right++;
+		}
+		pos = 0;
+		dis = right;
+	}
+	while (left < seats.size() && right < seats.size()) {
+		left = right;
+		right++;
+		while ( right < seats.size() && seats[right] == 0) {
+			right++;
+		}
+		if (right == seats.size()) {
+			int new_dis = right - left - 1;
+			if (new_dis > dis) {
+				dis = new_dis;
+				pos = right - 1;
+			}
+			break;
+		} else {
+			int new_dis = (right - left) / 2;
+			if (new_dis > dis) {
+				dis = new_dis;
+				pos = left + new_dis;
+			}
+		}	
+	}
+	if (pos == -1) {
+		return -1;
+	}
+	seats[pos] = student;
+	m[student] = pos;
+	return pos;
+}
+
+// o(1)
+void remove(int student) {
+	seats[m[student]] = 0;
+	m.erase(student);
+}
