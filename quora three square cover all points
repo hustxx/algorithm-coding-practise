@@ -1,0 +1,63 @@
+ 随意给出n个点的坐标，求最小的可以cover所有的点的三个同样的正方形的边长。
+ 
+ 
+ int squareCover(vector<pair<int, int>> &points) {
+ 	int up = INT_MIN, down = INT_MAX; right = INT_MIN, left = INT_MAX;
+ 	for (auto p : points) {
+		if (p.first > up) {
+			up = p.first;
+		}
+		if (p.first < down) {
+			down = p.first;
+		}
+		if (p.second > right) {
+			right = p.second;
+		}
+		if (p.second < left) {
+			left = p.second;
+		}
+	}
+	int start = 0, end = max(up - down, right - left);
+	
+	while (start + 1 < end) {
+		int mid = start + (end - start) / 2;
+		if(isSquareCover(points, mid, 0)) {
+			end = mid;
+		} else {
+			start = mid;
+		}		
+	}
+	if (isSquareCover(points, start, 0)) {
+		return start;
+	} else {
+		return end;
+	}
+ }
+ 
+ bool isSquareCover(vector<pair<int, int>> & points, int len, int cnt) {
+ 	if (points.empty()) {
+		return true;
+	} 
+	if (cnt >= 3) {
+		return false;
+	}
+	bool res = false;
+	vector<pair<int, int>> top_left = getTopLeft(points, len);	
+	for (auto tl : top_left) {
+		vector<pair<int, int>> rest_points;
+		for (auto ps : points) {
+			if (!isInSquare(tl, len, ps)) {
+				rest_points.push_back(ps);
+			}	
+		}
+		if (isSquareCover(rest_points, len, cnt + 1)) {
+			return true;
+		}
+	}
+	
+	return false;
+ }
+ 
+ 
+ 
+ 
