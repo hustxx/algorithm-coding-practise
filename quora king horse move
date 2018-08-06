@@ -1,0 +1,10 @@
+35 第二轮是先warmup写国际象棋马move到任意位置的步数，然后写一个棋盘king move到任意位置的 最少位数。 
+可以用O(1)实现，follow up是如果有obstacle怎么办， 应该考虑从原点到obstacle周围点的步数， 再从这些周围点考虑到目标的步数。
+
+int kingMove(vector<vector<int, int>> board, int s_x, int x_y, int e_x, int e_y) {
+	ind dis_x = abs(s_x - e_x);
+	int dis_y = abs(s_y - e_y);
+	
+	return abs(dis_x - dis_y);
+}
+
