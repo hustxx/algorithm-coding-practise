@@ -4,11 +4,13 @@
 记录每个点own多少percentage的target）
 
 
-unordered_map<string, vector<pair<string, double>>> share_map;
+unordered_map<string, vector<pair<string, double>>> share_map; // A owns list of {b: shares}
 unordered_map<string, double> memory;
 
 void set_share_map(vector<string, pair<string, double>> &input) {
-
+	for (auto item : input) {
+		share_map[item.first].push_back(item.second);
+	}
 }
 
 double getShare(string A, string B) {
@@ -37,17 +39,17 @@ void dfs(string cur, string target, unordered_set<string> &visited) {
 	for (int i = 0; i < share_map[cur].size(); i++) {
 		if (visited.count(share_map[cur][i].first) == 0) {
 			visited.insert(share_map[cur][i].first);
-			try {
+			//try {
 				double share = dfs(share_map[cur][i].first, target, visited);
 				if (share == -1.0) {
 					return -1.0;
 				}
 				res += share_map[cur][i].second * share;
 				visited.erase(share_map[cur][i].first);
-			} catch (const char* msg) {
-				cerr<<msg<<endl;
-				return -1.0;
-			}
+			//} catch (const char* msg) {
+			//	cerr<<msg<<endl;
+			//	return -1.0;
+			//}
 		} else {
 			// todo: error
 			// throw "loop detected, invalid input";
