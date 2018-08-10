@@ -1,0 +1,30 @@
+producer-consumer queue
+
+condition_variable cond;
+queue<string> que;
+mutex mtx_que;
+
+void searchFile() {
+	while (true) {
+		mtx_que.lock();
+		if (!que.empty() && workerAvaiable()) {
+			string task = que.front();
+			que.pop();
+			
+			assign_task(task);
+			
+			mtx_que.unlock();
+		} else {
+			cond.wait(mtx_que);
+		}
+	
+	}
+  
+}
+
+void addTask(string s) {
+	lock(mtx_que);
+	que.push(s);
+	unlock(mtx_que);
+	cond.notify_one();
+}
