@@ -1,0 +1,45 @@
+// In-memory database
+// 1. void put(key, value)
+// 2. void delete(key)
+// 3. void get(key, snapshot)
+// 4. Snapshot get()
+// 5. void delete(snapshot)
+
+
+
+unordered_map<string, map<int, string>> hash_map; // key : {snap_id : value}
+int next_id = 1;
+
+void put(string key, string value) {
+	if (hash_map.count(key) == 0) {
+		hash_map[key].insert({next_id, value});
+	} else {
+		if ((*hash_map[key].rbegin()).first == next_id) {
+			(*hash_map[key].rbegin()).second = value;
+		} else {
+			hash_map[key].insert({next_id, value});
+		}
+	}
+	return;
+}
+
+string get(string key, int snap) {
+	if (hash_map.count(key) == 0 || snap >= next_id) {
+		return "";
+	}
+	if (hash_map[key].count(snap) == 0) {
+		return "";
+	}
+	return hash_map[key][snap];
+}
+
+int snap_get() {
+	for (auto item : hash_map) {
+		if ((*item.second.rbegin()).first != next_id) {
+			string tmp = (*item.second.rbegin()).second;
+			item.second.insert({next_id, tmp});
+		}
+	}
+	next_id++;
+}
+
