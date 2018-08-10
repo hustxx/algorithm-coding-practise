@@ -11,21 +11,55 @@ d
   a
       c
 
-
-int cutTree(TreeNode* root) {
+struct TreeNode {
+	int val;
+	vector<TreeNode*> neighbors;
+};
+// bad solution
+vector<pair<TreeNode*, int>> cutTree(TreeNode* root) {
 	vector<pair<TreeNode*, int>> res;
 	int num = helper(root, res);
-	if (num % 2 == 0) {
-		return res.size();
-	}
-	return 0;
+	int total = count_total_nodes(root);
+	return res;
 }
 // return value: how many nodes int the sub tree
-int helper(TreeNode* node, vector<pair<TreeNode*, int>> &res) {
+int helper(TreeNode* node, vector<pair<TreeNode*, int>> &res, int total) {
+	if (!node) {
+		return 0;
+	}
+	int sub_total = 1;
+	vector<int> sub_cnt; // number of nodes in each subnode
+	for (int i = 0; i < node->neighbors.size(); i++) {
+		int num = helper(node->neighbors[i]), res);
+		sub_cnt.push_back(num);
+		sub_total += num;
+	}
+	
+		for (int idx = 0; idx < sub_cnt.size(); idx++) {
+			if (sub_cnt[idx] != 0 && sub_cnt[idx] % 2 == 0 && (total - sub_cnt -) % 2) {
+				res.push_back({node, i});
+				total -= sub_cnt[idx];
+			}
+		}
+	
+	return total;
+
+}
+// good solution
+vector<pair<TreeNode*, int>> cutTree(TreeNode* root) {
+	vector<pair<TreeNode*, int>> res;
+	int num = helper(root, res);
+	if (num % 2 == 1) {
+		return {};
+	}
+	return res;
+}
+int helper2(TreeNode* node, vector<pair<TreeNode*, int>> &res) {
 	if (!node) {
 		return 0;
 	}
 	int cnt = 1;
+	vector<int> sub_cnt; // number of nodes in each subnode
 	for (int i = 0; i < node->neighbors.size(); i++) {
 		int num = helper(node->neighbors[i]), res);
 		if (num != 0 && num % 2 == 0) {
@@ -36,18 +70,5 @@ int helper(TreeNode* node, vector<pair<TreeNode*, int>> &res) {
 	}
 	
 	return cnt;
-/*	
-	int left = helper(node->left, res);
-	int right = helper(node->right, res);
-	if (left % 2 == 0 && right % 2 == 0) {
-		return left + right + 1;
-	} else if (left % 2 == 0 && node->left) {
-		res.push_back({node, 0});
-	} else if (right % 2 == 0 && node->right) {
-		res.push_back({node, 1});
-	}
-	
-	return left + right + 1;
-	
-*/
+
 }
