@@ -50,13 +50,13 @@ int group_one(vector<vector<int>> &matrix, int k) {
 			if (j == 0) {
 				for (int m = 0; m < k; m++) {
 					if (matrix[i - 1][m] == 0) {
-						cnt--;
+						start--;
 					}
 					if (matrix[i + k - 1][m] == 0) {
-						cnt++;
+						start++;
 					}
 				}
-				start = cnt;
+				cnt = start;
 			} else {
 				for (int n = i; n < i + k; n++) {
 					if (matrix[n][j - 1] == 0) {
