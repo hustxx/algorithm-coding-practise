@@ -1,0 +1,62 @@
+(2) 给两个参数： n, target. 让你打印出n个数字的和是target的所有的组合。比如（2， 3） -> (0, 3), (1, 2 )， 数字必须非负数。
+dfs可以搞定，优化的话是可以加memorization，因为DFS的过程中有重复解决同一个subproblem.
+///dfs
+void helper(int n, int target, int start, vector<int> &tmp, vector<vector<int>> &res) {
+    if (n <= 0) {
+        if (target == 0) {
+            res.push_back(tmp);
+        }
+        return;   
+    }
+    for (int num = start; num <= target; num++) {
+        tmp.push_back(num);
+        helper(n - 1, target - num, num, tmp, res);
+        tmp.pop_back();
+    }
+    return;
+}
+
+vector<vector<int>> findList(int n, int target) {
+  vector<vector<int>> res;
+  vector<int> tmp;
+  helper(n, target, 0, tmp, res);
+	
+  return res;
+}
+
+/// memorize solution backtrace
+unordered_map<string, vector<vector<int>>> mem;
+
+vector<vector<int>> helper(int n, int target, int start) {
+    if (n <= 0 || target < start) {
+        return {};   
+    }
+    if (n == 1) {
+        return {{target}};   
+    }
+    string key = to_string(n) + "," + to_string(target);
+    if (mem.count(key) != 0) {
+        return mem[key];
+    }
+    vector<vector<int>> res;
+    for (int num = start; num <= target; num++) {
+        vector<vector<int>> next = helper(n - 1, target - num, num);
+        for(int i = 0; i < next.size(); i++) {
+            next[i].push_back(num);   
+        }
+        for (auto n : next) {
+            res.push_back(n);   
+        }
+    }
+    mem[key] = res;
+
+    
+    return res;
+}
+
+vector<vector<int>> findList(int n, int target) {
+    vector<vector<int>> res;
+    res = helper(n, target, 0);
+    return res;
+}
+
