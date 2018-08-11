@@ -19,3 +19,22 @@ int backspace(char[] charArray, int idx) {
 	}
 	return res;
 }
+
+int backspace(Byte[] charArray, int idx) {
+	int cnt = 0;
+	if (charArray[idx] & 128 != 0) {
+		return idx - 2;
+	} else {
+		int run = idx - 1;
+		while (run >= 0 && CharArray[run] & 128 != 0) {
+			cnt++;
+			run--;
+		}
+		if (cnt % 2== 0) {
+			return idx - 1;
+		} else {
+			return idx - 2;
+		}
+	}
+	
+}
