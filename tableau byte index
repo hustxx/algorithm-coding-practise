@@ -1,0 +1,21 @@
+14 给一个character array，每一个character用byte表示，每个byte第一个bit决定character是8位还是16位。
+第一个bit是0表示character是8位，第一个bit是1表示character是16位。写一个int backspace(Byte[] charArray, int idx)，
+argument idx代表last character最后一位，要求返回前一个character最后一个byte的index. 每一个character可以由一个或者2个byte组成。
+所以input idx就是last byte within a character。最后要求返回的是前一个character最后一个byte的idx
+
+
+int backspace(char[] charArray, int idx) {
+	if (idx == 0) {
+		return -1;
+	}
+	int run = 0, res = 0;
+	while (run != idx && (run != idx - 1 && (charArray[run] & 128 != 0))) {
+		res = run;
+		if(charArray[run] & 128 != 0) {
+			run += 2;
+		} else {
+			run++;
+		}
+	}
+	return res;
+}
