@@ -1,0 +1,77 @@
+Given an article and some words, find the shortest phrases that contains all the words.
+
+Example: Given words=[‘world’, ‘cup’, ‘soccer’] and article:
+“We are having world cup at this time, everybody is so happy to see this great soccer competition. 
+World cup is the most important soccer competition in the world”
+
+string findShortestPhrases(vector<string> &words, string &str) {
+	unordered_map<string, int> strMap;
+	for (string w : words) {
+		strMap[w]++;
+	}
+	int len = words.size();
+	
+	int start = 0, end = 0, res = str.size();
+	while (end < str.size()) {
+		while (end < str.size() && str[end] == ' ') {
+			end++;
+		}
+		if (end == str.size()) {
+			break;
+		}
+		int next = getNextWord(str, end);
+		string nextWord = str.substr(end, next - end);
+		if (strMap.count(nextWord) != 0) {
+			strMap[nextWord]--;
+			if (strMap[nextWord] >= 0) {
+				len--;
+				// move start and get short phrase
+				if (len == 0) {
+					while (start < end) {
+						while (start < end && str[start] == ' ') {
+							start++;
+						}
+						int next = getNextWord(str, start);
+						string nextWord = str.substr(start, next - start);
+						if (strMap.count(nextWord) > 0) {
+							strMap[nextWord]++;
+							if (strMap[nextWord] > 0) {
+								len++;
+							}
+						}
+						if (len > 0) {
+							res = min(res, end - start + 1);
+							start = next;
+							break;
+						}
+						start = next;
+					}
+					
+				}
+			}
+		}
+	}
+	if (len == 0) {
+					while (start < end) {
+						while (start < end && str[start] == ' ') {
+							start++;
+						}
+						int next = getNextWord(str, start);
+						string nextWord = str.substr(start, next - start);
+						if (strMap.count(nextWord) > 0) {
+							strMap[nextWord]++;
+							if (strMap[nextWord] > 0) {
+								len++;
+							}
+						}
+						if (len > 0) {
+							res = min(res, end - start + 1);
+							start = next;
+							break;
+						}
+						start = next;
+					}
+					
+	}
+	return res;
+}
