@@ -1,0 +1,23 @@
+把整个树都删除，只能用O(1)空间，挂在这个上面了，只写了一个非最优解，最后大概知道怎么做了，但是没时间了
+
+void deleteTree(TreeNode* root) {
+   	if (!root) {
+   		return;
+   	}
+	TreeNode* run = root;
+	while (run) {
+		TreeNode* left_tail = run->left;
+		if (run->left) {
+			while (left_tail->right) {
+				left_tail = left_tail->right;
+			}
+			left_tail->right = run->right;
+			run->right = run->left;
+		}
+		TreeNode *cur = run;
+		run = run->right;
+		delete cur;	
+	}
+	
+	return;
+}
