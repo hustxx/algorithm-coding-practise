@@ -1,0 +1,48 @@
+27.	有向有环图，其中有一部分特殊节点，node.XXX = true， 特殊节点需要自己去找。input是一个图的根节点，通过根节点可以遍历整张图。
+要求输出所有特殊节点以及存在路径到达特殊节点的节点。
+
+struct Node {
+	bool target = true;
+	string val;
+	vector<Node*> next;
+}
+
+vector<Node*> findTarget(Node *root) {
+	vector<Node*> res;
+	bool change = true;
+	unordered_set<Node*> found;
+	
+	while (change) {
+		unordered_set<Node*> visited;
+		found = false;
+		int pre_size = found.size();
+		dfs(root, visited, found);
+		if (found.size() > pre_size) {
+			found = ture;
+		}
+	}
+	for (Node* n : found) {
+		res.push_back(n);
+	}
+	return res;
+}
+
+bool dfs(Node* root, unordered_set<Node*> &visited, unordered_set<Node*> &found) {
+	if (!root) {
+		return false;
+	}
+
+	visited.insert(root);
+	if (root->target == true) {
+		found.insert(root);
+	}
+	for (Node* next : root->next) {	
+		if (visited.count(next) == 0 && dfs(next, visited, found)) {
+			found.insert(root);
+		} else if (visited.count(next) > 0 && found.count(next) > 0) {
+			found.insert(root);
+		}
+	}
+	
+	return (found.count(root) > 0);
+}
