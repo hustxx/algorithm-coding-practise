@@ -1,0 +1,60 @@
+using namespace std
+
+class pro_con_queue {
+private:
+	mutex mux;
+	condition_variable cond;
+	queue<int> que;
+	int max_size;
+public:
+	pro_con_queue();
+	
+  	void add(int target) {
+		mux.lock();
+		cond.wait(mux, [this](){return que.size() < max_size});
+		que.push(target);
+		mux.unlock();
+		cond.notify_all();
+	}
+	
+	void get(int target) {
+		mux.lock();
+		cond.wait(mux, [this](){return que.size() > 0});
+		int res = que.pop();
+		mux.unlock();
+		cond.notify_all();
+		return res;
+	}
+}
+
+class producer {
+	
+}
+
+class Consumer {
+private:
+	pro_con_queue &que;
+public:
+	Consumer(pro_con_queue &q) : que(q) {};
+
+	void run () {
+		while (true) {
+			int target = que.get();
+			exec(target);
+		}
+	}
+}
+
+int main() {
+	pro_con_queue que;
+	Producer pro(que);
+	Consumer con(que);
+
+	thread producer_thread(&Producer::run(), &pro);
+	thread consumer_thread(&Consumer::run(), &con);
+	
+	producer_thread.join();
+	consumer_thread.join();
+	
+	return 0;
+}
