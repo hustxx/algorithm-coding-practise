@@ -1,0 +1,71 @@
+32.	题意大概是给一个ip, e.g. 22.23.44.5, 然后可以有个东西叫subnet的数字接在ip后面, ip+subnet 就是 22.23.44.5/x。
+一个例子：
+IP: a.b.c.d
+Subnet: a.b.c.d/x (x = 0 - 32) = 2 ^ (32 - x) IPs
+1.2.3.0/24 = [1.2.3.0, 1.2.3.1, .... 1.2.3.255]
+现在给我K个list，每个list里一堆ip地址，可能有ip+subnet这种组合的ip
+L1 = [1.2.3.0, 4.5.6.7, ....]
+L2 = [1.2.3.5, 6.7.0.0/16, ...]
+L3 = [1.2.3.0/30, 7.8.9.0/24, .....]
+要我设计一个东西，储存这几个List,然后有一个叫find的method，输入是一个ip地址，可以很快的返回这个ip地址在哪个list里有。
+findLists(1.2.3.1) = [L1, L3]
+findLists(1.2.3.40) = [L1]
+findLists(1.2.3.5) = [L1, L2][/hide]
+
+
+user trie
+
+struct Node {
+	unordered_set<int> list_id;
+	vector<Node*> next(2, NULL);
+};
+
+Node* start;
+vector<int> findLists(vector<vector<pair<long, int>>> &ip_lists, long target) {
+	for (int idx = 0; idx < ip_lists.size(); idx++) {
+		for (auto ip : ip_lists[idx]) {
+			long check = 1;
+			for (int i = 0; i < 31; i++) {
+				check <<= 1;
+			}
+			Node* run = start;
+			for (int bit = 31; bit >= (32 - ip.second); bit--) {
+				int bit_val = check & ip.first;
+				check >>= 1;
+				if (!run->next[bit_val]) {
+					Node* new_node = new Node();
+					run->next[bit_val] = new_node;
+				}
+				run = run->next[bit_val];				
+			}
+			run->list_id.insert(idx);
+
+		}
+	}
+	
+	// find target
+	unordered_set<int> res;
+	
+	Node* run = start;
+	long check = 1;
+	for (int i = 0; i < 31; i++) {
+		check <<= 1;
+	}
+	for (int bit = 31; bit >= 0; bit--) {
+		int bit_val = check & target;
+		check >>= 1;
+
+		if (run->next[bit_val]) {
+			run = run->next[bit_val];
+			if (run->list_id.size() > 0) [
+				for (auto id : run->list_id) {
+					res.insert(id);
+				}
+			}
+		} else {
+			break;
+		}
+	}
+	
+	return res;
+}
