@@ -1,0 +1,39 @@
+33.	给由0和1组成的matrix，找由1组成的X的最大size(边长)。
+以下是1
+1
+以下是2
+1 0 1
+0 1 0
+1 0 1
+以下是3
+1 0 0 0 1
+0 1 0 1 0
+0 0 1 0 0
+0 1 0 1 0
+1 0 0 0 1
+
+
+int findMaxX (vector<vector<int>> &matrix) {
+	int rows = matrix.size();
+	itn cols = matrix[0].size();
+	vector<vector<int>> left_up = matrix;
+	vector<vector<int>> right_up = matrix;
+	vector<vector<int>> left_down = matrix;
+	vector<vector<int>> right_down = matrix;
+	
+	for (int row = 1; row < rows; row++) {
+		for (int col = 1; col < cols; col++) {
+			if (matrix[row][col] == 1) {
+				left_up[row][col] = left_up[row - 1][col - 1] + 1;
+				right_up[row][cols - col - 1] = right_up[row - 1][cols - col] + 1;
+				left_down[rows - row - 1][col] = left_down[rows - row][col - 1] + 1;
+				right_down[rows - row - 1][cols - col - 1] = right[rows - row][cols - col] + 1;
+	
+			}
+		}
+	}
+	
+	// find max value 
+	
+	return;
+}
