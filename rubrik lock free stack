@@ -1,0 +1,36 @@
+template<typename T>
+struct node {
+	T data;
+	node* next;
+	node(T& d) : data(d), next(NULL) {}
+};
+
+
+template<typename T>
+class lock_free_stack {
+	atomic<node<T>*> head;
+	
+	T pop () {
+		Node<T> *newHead;
+		Node<T> *oldHead;
+	
+		do {
+			oldHead = head;
+			if (!oldHead) {
+				return NULL;
+			}
+			newHead = oldHead->next;
+		} while (!head.compareAndSet(oldHead, newHead));
+		return oldHead.data;
+	}
+
+	void push(T newVal) {
+		node<T> *oldHead;
+		node<T> *newHead = new Node(newVal);
+		
+		do {
+			oldHead = head;
+			newHead->next = oldHead;
+		} while (!head.compareAndSet(oldHead, newHead));
+	}
+}
