@@ -7,28 +7,35 @@ N ＝ 4， k ＝ 2， 矩阵如下：
 0 0 0 0
 输出是 1， 因为只要交换 （0， 3） 和 （1， 1） 的元素即可。
 
-
-int group_ones(vector<vector<int>> &matrix, int k) {
-	int cnt = 0; // zero count in subarray
-	for (int i = 0; i < k; i++) {
-		for (int j = 0; j < k; j++) {
-			if (matrix[i][j] == 0) {
-				cnt++;
-			}
+//dp
+int group_one(vector<vector<int>> &matrix, int k) {
+	int n = matrix.size();
+	vector<vector<int>> dp(n, vector<int>(n, 0)); // sum[0,0 ->i, j]
+	
+	dp[0][0] = matrix[0][0];
+	for (int idx = 1; idx < n; idx++) {
+		dp[0][idx] += dp[0][idx - 1];
+		dp[idx][0] += dp[idx - 1][0];
+	}
+	
+	for (int row = 1; row < n; row++) {
+		for (int col = 1; col < n; col++) {
+			dp[row][col] = dp[row - 1][col] + dp[row][col - 1] - dp[row][col] + matrix[row][col];
 		}
 	}
-	int res = cnt;
-	unordered_set<pair<int, int>> visited;
-	visited.insert({0,0});
-	dfs(matrix, 0, 1, res, cnt, visited, 0);
-	dfs(matrix, 1, 0, res, cnt, visited, 1);
-	return res;
+	
+	int res = 0;
+	for (int row = k - 1; row < n; row++) {
+		for (int col = k - 1; col < n; col++) {
+			int left = (col - 1 < 0) ? 0 : dp[row][col - 1];
+			int up = (row - 1 < 0) ? 0 : dp[row - 1][col];
+			int left_up = (col < 1 || row < 1) ? 0 : dp[row - 1][col - 1];
+			res = max(res, dp[row][col] + left+up - left - up);
+		}
+	}
+	
+	return k * k - res;
 }
-
-void dfs(matrix, x, y, res, cnt, visited) {
-	if ...
-}
-
 
 int group_one(vector<vector<int>> &matrix, int k) {
 	int cnt = 0, res = k * k;
