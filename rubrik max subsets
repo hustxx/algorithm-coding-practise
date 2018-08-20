@@ -17,6 +17,8 @@ int getMaxSubsets(vector<int> &nums) {
 			while (run >= 0 && nums[run] == nums[i] - 1) {
 				run--;
 			}
+			// todo: move i to the end
+			
 			if (run >= 0) {
 				pre = dp[run];
 			}
@@ -25,4 +27,45 @@ int getMaxSubsets(vector<int> &nums) {
 		res = max(res, dp[i]);
 	}
 	return res;
+}
+
+
+int getMaxSubset(vector<int> &nums) {
+	unordered_map<int, int> numMap; // num : sum of this num
+	vector<int> new_nums;
+	
+	sort(nums.begin(), nums.end());
+	for (int idx = 0; idx < nums.size(); idx++) {
+		if (idx == 0) {
+			new_nums.push_back(nums[idx]);
+			numMap[nums[idx]] = nums[idx];
+		} else {
+			if (nums[idx] == nums[idx - 1]) [
+				numMap[nums[idx]] += nums[idx];
+			} else {
+				new_nums.push_back(nums[idx]);
+				numMap[nums[idx]] = nums[idx];
+			}
+		}
+	}
+	vector<int> dp(new_nums.size(), INT_MIN);
+	int dp[0] = numMap[new_nums[0]];
+	
+	for (int idx = 1; idx < dp.size(); idx++) {
+		if (idx == 1) {
+			if (new_nums[idx] == new_nums[idx - 1] + 1) {
+				dp[idx] = max(numMap[new_nums[idx]], dp[idx - 1]);
+			} else {
+				dp[idx] = max(numMap[new_nums[idx]], max(dp[idx - 1], numMap[new_nums[idx]] + dp[idx - 1]));
+			}
+		} else {
+			if (new_nums[idx] == new_nums[idx - 1] + 1) {
+				dp[idx] = max(numMap[new_nums[idx]], max(dp[idx - 1], numMap[new_nums[idx]] + dp[idx - 2));
+			} else {
+				dp[idx] = max(numMap[new_nums[idx]], max(dp[idx - 1], numMap[new_nums[idx]] + dp[idx - 1]));
+			}
+		}
+	}
+	
+	return dp.back();
 }
