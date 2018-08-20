@@ -1,3 +1,26 @@
 Given a 2D array, find the maximum sum subarray in it. For example, in the following 2D array, 
 the maximum sum subarray is highlighted with blue rectangle and sum of this subarray is 29.
 
+
+int maxRectangle(vector<vector<int>> &matrix) {
+	int res = 0;
+	int rows = matrix.size(), cols = matrix[0].size();
+	
+	for (int left = 0; left < cols; left++) {
+		vector<int> tmp(rows, 0);
+		int tmp_res = INT_MIN;
+		for (int right = left; right < cols; right++) {
+			for (int row = 0; row < rows; row++) {
+				tmp[row] += matrix[row][right];
+				if (row == 0) {
+					tmp_res = tmp[0];
+				} else {
+					tmp_res = max(tmp[row], tmp_res + tmp[row]);
+				}
+				res = max(tmp_res, res);
+			}
+		}
+	}
+	
+	return res;
+}
