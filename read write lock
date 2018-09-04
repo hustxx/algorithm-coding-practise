@@ -11,6 +11,7 @@ public:
 		if (read_cnt == 1) {
 			write_mtx.lock();
 		}
+		write_status_mtx.lock();
 		read_mtx.unlock();
 	}
 	
@@ -31,3 +32,42 @@ public:
 		write_mtx.unlock();
 	}
 };
+
+
+class rwlock_write_priority {
+private:
+	mutex mtx;
+	conditional_variable cond;
+	int cnt; // 0: no lock, >0: read lock count, <0: write lock waiting
+	bool write_lock_wait;
+public:
+	void read_lock() {
+		unique_lock<mutex> lc(mtx);
+		cond.wait(lc, []{return (cnt >= 0 && !write_lock_wait);});
+		cnt++;
+	}
+	void read_unlock() {
+		mtx.lock();
+		cnt--;
+		if (cnt == 0) {
+			cond.nofify_all();
+		}
+		mtx.unlock();
+	}
+	void write_lock() {
+		unique_lock<mutex> lc(mtx);
+		write_lock_wait = true;
+		cond.wait(lc, []{return (cnt == 0);})
+		write_lock_wait = false;
+		cnt = -1;
+	}
+	void write_unlock() {
+		mtx.lock();
+		cnt = 0;
+		cond.notify_all();
+		mtx.unlock();
+	}	
+	
+
+}
+
