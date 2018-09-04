@@ -1,0 +1,57 @@
+template< class T >
+class myVector {
+private:
+	T* start;
+	int cur_size;
+	int capacity;
+	
+public:
+	typedef T* iterator;
+	
+	myVector(int size = 0) : cur_size(size), capacity(4) {
+		start = new T[capacity + 1];
+	};
+	
+	void push_back(T &t) {
+		if (cur_size == capacity) {
+			resize();
+		}
+		start[cur_size] = t;
+		cur_size++;
+	}
+	
+	void pop_back() {
+		cur_size--;
+	}
+
+	T back() {
+		return start[cur_size - 1];
+	}
+
+	void resize() {
+		int new_cap = 2 * capacity;
+		T* old_start = start;
+		start = new T[new_cap + 1];
+		for (int idx = 0; idx < cur_size; idx++) {
+			start[idx] = old_start[idx];
+		}
+		capacity = new_cap;
+		delete [] old_start;
+	}	
+
+	iterator begin() {
+		return start;
+	}
+	
+	iterator end() {
+		return &start[cur_size];
+	}
+	
+	int capacity() {
+		return capacity;
+	}
+	
+	int size() {
+		return cur_size;
+	}
+}
